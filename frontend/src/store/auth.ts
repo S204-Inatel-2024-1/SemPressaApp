@@ -28,7 +28,7 @@ export const useAuthStore = create<IAuthStore>((set) => {
       }
 
       const authToken = cookies[AUTH_CONSTANTS.AUTH_PROPERTY_NAME]
-      set(() => ({ authToken }))
+      set(() => ({ authToken, isLogged: true }))
 
       return true
     },
