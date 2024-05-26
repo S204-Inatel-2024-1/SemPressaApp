@@ -1,5 +1,3 @@
-import LogoInatel from '@/assets/Logo_Inatel.png'
-import FetinText from '@/assets/FetinText.png'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -10,8 +8,23 @@ import { parseZodErrors } from '@/utils/parse-zod-errors'
 import { useState } from 'react'
 import { useAuthStore } from '@/store/auth'
 
+import { TabsTrigger, TabsList, TabsContent, Tabs } from '@/components/ui/tabs'
+import {
+  CardTitle,
+  CardDescription,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  Card,
+} from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { RotateCw } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+
 const loginFormSchema = z.object({
-  user: z
+  username: z
     .string({
       required_error: 'É necessário digitar o seu usuário!',
     })
@@ -30,18 +43,20 @@ const loginFormSchema = z.object({
 type LoginFormSchema = z.infer<typeof loginFormSchema>
 
 export function Login() {
-  const [currentTab, setCurrentTab] = useState<'admin' | 'team' | 'advisor'>(
-    'team',
-  )
+  const [currentTab, setCurrentTab] = useState<string>('student')
+  const navigate = useNavigate()
 
-  const { login } = useAuthStore((state) => ({ login: state.login }))
+  const { login, user } = useAuthStore((state) => ({
+    login: state.login,
+    user: state.user,
+  }))
 
   const form = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
   })
 
-  async function handleLogin({ password, user }: LoginFormSchema) {
-    const hasLoggedWithSuccess = await login(user, password, currentTab)
+  async function handleLogin({ password, username }: LoginFormSchema) {
+    const hasLoggedWithSuccess = await login(username, password, currentTab)
 
     if (!hasLoggedWithSuccess) {
       return toast.error('Erro ao tentar logar', {
@@ -52,6 +67,8 @@ export function Login() {
     toast.success('Sucesso', {
       description: 'Você foi logado com sucesso',
     })
+
+    navigate(`/${user!.role}`)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,83 +85,72 @@ export function Login() {
     }
   }
 
-  return (
-    <div className="flex items-end justify-end w-3/5 relative">
-      <div className="flex flex-col items-center justify-start gap-1">
-        <img className="w-40" src={LogoInatel} alt="" />
-        <div className="bg-app-purple-600 h-96 p-8 rounded-l-xl flex justify-center items-start">
-          <img className="w-64 mt-4" src={FetinText} alt="" />
-        </div>
-      </div>
-      <div className="h-96 w-full relative">
-        <div className="absolute -top-9">
-          <button
-            data-active={currentTab === 'team'}
-            className="w-32 bg-app-pink py-1.5 rounded-t-xl data-[active=true]:opacity-100 opacity-50 text-app-purple-700 font-semibold"
-            onClick={() => setCurrentTab('team')}
-          >
-            Equipe
-          </button>
-          <button
-            data-active={currentTab === 'advisor'}
-            className="w-32 bg-app-pink py-1.5 rounded-t-xl data-[active=true]:opacity-100 opacity-50 text-app-purple-700 font-semibold"
-            onClick={() => setCurrentTab('advisor')}
-          >
-            Orientador
-          </button>
-          <button
-            data-active={currentTab === 'admin'}
-            className="w-32 bg-app-pink py-1.5 rounded-t-xl data-[active=true]:opacity-100 opacity-50 text-app-purple-700 font-semibold"
-            onClick={() => setCurrentTab('admin')}
-          >
-            Administrador
-          </button>
-        </div>
-        <div className="bg-app-pink w-full h-full rounded-r-xl flex-col space-y-8 flex items-center justify-center">
-          <h2 className="text-5xl font-semibold text-app-purple-600 ">Login</h2>
+  let title = currentTab
+  switch (title) {
+    case 'admin':
+      title = 'Administrador'
+      break
+    case 'advisor':
+      title = 'Orientador'
+      break
+    case 'student':
+      title = 'Estudante'
+      break
+  }
 
-          <form
-            onSubmit={form.handleSubmit(handleLogin, handleFormErrors)}
-            className="flex flex-col items-center justify-center gap-4"
-          >
-            <div className="flex flex-col items-start justify-start">
-              <label
-                htmlFor="user"
-                className="text-lg text-app-purple-700 font-semibold"
-              >
-                Usuário
-              </label>
-              <input
-                id="user"
-                className="border-2 border-app-purple-800 rounded-lg bg-transparent focus-within:outline-none focus:outline-none p-3 py-2 text-sm w-72"
-                {...form.register('user')}
+  return (
+    <Tabs
+      className="w-full max-w-md mx-auto my-auto"
+      defaultValue="admin"
+      value={currentTab}
+      onValueChange={setCurrentTab}
+    >
+      <TabsList className="grid grid-cols-3 w-full">
+        <TabsTrigger value="admin">Admin</TabsTrigger>
+        <TabsTrigger value="advisor">Orientador</TabsTrigger>
+        <TabsTrigger value="student">Estudante</TabsTrigger>
+      </TabsList>
+      <TabsContent className="py-2" value="admin"></TabsContent>
+      <TabsContent className="py-2" value="advisor"></TabsContent>
+      <TabsContent className="py-2" value="student"></TabsContent>
+      <Card>
+        <CardHeader>
+          <CardTitle className="capitalize">{title}</CardTitle>
+          <CardDescription>
+            Entre com suas {currentTab} credenciais abaixo.
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={form.handleSubmit(handleLogin, handleFormErrors)}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="admin-username">Usuário</Label>
+              <Input
+                id="admin-username"
+                placeholder="Entre com seu usuário"
+                {...form.register('username')}
               />
             </div>
-
-            <div className="flex flex-col items-start justify-start">
-              <label
-                htmlFor="password"
-                className="text-lg text-app-purple-700 font-semibold"
-              >
-                Senha
-              </label>
-              <input
-                id="password"
+            <div className="space-y-2">
+              <Label htmlFor="admin-password">Senha</Label>
+              <Input
                 type="password"
-                className="border-2 border-app-purple-800 rounded-lg bg-transparent focus-within:outline-none focus:outline-none p-3 py-2 text-sm w-72"
+                id="admin-password"
+                placeholder="Entre com sua senha"
                 {...form.register('password')}
               />
             </div>
-
-            <button
-              type="submit"
-              className="bg-app-purple-600 text-white text-lg font-semibold w-32 py-1 rounded-lg hover:brightness-75"
-            >
-              Entrar
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+          </CardContent>
+          <CardFooter>
+            <Button disabled={form.formState.isSubmitting} className="w-full">
+              {form.formState.isSubmitting ? (
+                <RotateCw className="size-4 animate-spin" />
+              ) : (
+                'Entrar'
+              )}
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </Tabs>
   )
 }
