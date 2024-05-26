@@ -15,5 +15,5 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private List<User> usersList = new ArrayList<>()
+    private List<User> usersList = new ArrayList<>();
 }
