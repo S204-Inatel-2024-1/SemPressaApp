@@ -19,6 +19,8 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { useTeamStore } from '@/store/app/team'
 
+import * as XLSX from 'xlsx'
+
 export function AdminHome() {
   const [searchParams, setSearchParams] = useSearchParams()
   const { fetchTeams, deleteTeam, teams, totalOfTeams } = useTeamStore(
@@ -50,6 +52,44 @@ export function AdminHome() {
     })
 
     location.reload()
+  }
+
+  async function handleDownloadTemplate() {
+    const templateHeaders = [
+      'Número da equipe',
+      'Nome do projeto',
+      'Integrante 01 da equipe',
+      'Email do integrante 01 da equipe',
+      'Integrante 02 da equipe',
+      'Email do integrante 02 da equipe',
+      'Integrante 03 da equipe',
+      'Email do integrante 03 da equipe',
+      'Integrante 04 da equipe',
+      'Email do integrante 04 da equipe',
+      'Nome do orientador',
+      'E-mail do orientador',
+      'Status',
+      'Paralelas',
+    ]
+    const workbook = XLSX.utils.book_new()
+
+    const worksheet = XLSX.utils.json_to_sheet(
+      templateHeaders.map((header) => ({ [header]: '' })),
+    )
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Fetin Template')
+    const buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
+    const blob = new Blob([buffer], { type: 'application/octet-stream' })
+
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'template.xlsx'
+
+    document.body.appendChild(a)
+    a.click()
+
+    document.body.removeChild(a)
   }
 
   return (
@@ -87,6 +127,9 @@ export function AdminHome() {
                 accept=".xlsx"
               />
             </div>
+          </Button>
+          <Button variant="outline" onClick={handleDownloadTemplate}>
+            Baixar Template
           </Button>
           <Button variant="outline" asChild>
             <Link to="/admin/teams/create">

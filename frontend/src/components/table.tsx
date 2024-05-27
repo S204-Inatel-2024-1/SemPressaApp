@@ -18,6 +18,8 @@ import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { GLOBALS_CONSTANTS } from '@/constants/globals'
 import { Button } from '@/components/ui/button'
+import { HelpText } from './ui/tooltip'
+import { cn } from '@/lib/utils'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -73,13 +75,22 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className="text-slate-700 dark:text-slate-100 h-full"
+                      className={cn(
+                        'text-slate-700 dark:text-slate-100 h-full',
+                        header.column.columnDef.id === 'actions' &&
+                          'flex items-center gap-3 h-11 pt-0.5',
+                      )}
                     >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
+                          )}
+                      {header.isPlaceholder
+                        ? null
+                        : header.column.columnDef.id === 'actions' && (
+                            <HelpText helpText="Ações para ser executadas em cima de cada dado da tabela" />
                           )}
                     </TableHead>
                   )

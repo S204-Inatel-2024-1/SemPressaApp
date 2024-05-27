@@ -34,7 +34,7 @@ const HelpText = ({ helpText }: HelpTextProps) => {
   return (
     <TooltipProvider>
       <Tooltip delayDuration={0}>
-        <TooltipTrigger>
+        <TooltipTrigger className="cursor-default">
           <CircleHelp className="size-4" />
         </TooltipTrigger>
         <TooltipContent>
