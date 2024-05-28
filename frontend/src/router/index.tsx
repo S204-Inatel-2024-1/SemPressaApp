@@ -4,19 +4,30 @@ import {
   createRoutesFromElements,
   Route,
 } from 'react-router-dom'
-import { Home } from '../pages/home'
+import { AdminHome } from '../pages/admin/teams'
 import { Login } from '../pages/login'
 import { RootLayout } from '../layouts/root'
 import NotFoundPage from '@/pages/not-found'
 import { ErrorLayout } from '@/layouts/error-layout'
+import { AdminCourseList } from '@/pages/admin/courses'
+import { AdminCourseForm } from '@/pages/admin/courses/form'
+import { AdminPhaseList } from '@/pages/admin/phases'
+import { AdminPhaseForm } from '@/pages/admin/phases/form'
 
 export function Router() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>
         <Route path="/" element={<RootLayout />}>
-          <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/admin">
+            <Route index element={<AdminHome />} />
+            <Route path="courses" element={<AdminCourseList />} />
+            <Route path="courses/form" element={<AdminCourseForm />} />
+
+            <Route path="phases" element={<AdminPhaseList />} />
+            <Route path="phases/form" element={<AdminPhaseForm />} />
+          </Route>
         </Route>
         <Route path="*" element={<ErrorLayout />}>
           <Route path="*" element={<NotFoundPage />} />

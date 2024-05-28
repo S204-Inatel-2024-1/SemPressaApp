@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import Cookie from 'js-cookie'
-import { AUTH_CONSTANTS } from '../contants/store/auth'
+import { AUTH_CONSTANTS } from '../constants/store/auth'
 import { delay } from '@/utils/delay'
 
 export type UserRole = 'admin' | 'student' | 'advisor'
