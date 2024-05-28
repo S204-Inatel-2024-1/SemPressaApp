@@ -11,6 +11,8 @@ import NotFoundPage from '@/pages/not-found'
 import { ErrorLayout } from '@/layouts/error-layout'
 import { AdminCourseList } from '@/pages/admin/courses'
 import { AdminCourseForm } from '@/pages/admin/courses/form'
+import { AdminPhaseList } from '@/pages/admin/phases'
+import { AdminPhaseForm } from '@/pages/admin/phases/form'
 
 export function Router() {
   const router = createBrowserRouter(
@@ -22,6 +24,9 @@ export function Router() {
             <Route index element={<AdminHome />} />
             <Route path="courses" element={<AdminCourseList />} />
             <Route path="courses/form" element={<AdminCourseForm />} />
+
+            <Route path="phases" element={<AdminPhaseList />} />
+            <Route path="phases/form" element={<AdminPhaseForm />} />
           </Route>
         </Route>
         <Route path="*" element={<ErrorLayout />}>

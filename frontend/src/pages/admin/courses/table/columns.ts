@@ -9,7 +9,7 @@ export type Course = {
 export const courseColumns: ColumnDef<Course>[] = [
   {
     accessorKey: 'id',
-    header: 'N°',
+    header: 'ID',
   },
   {
     accessorKey: 'name',

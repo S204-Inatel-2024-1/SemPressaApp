@@ -19,7 +19,7 @@ import { useState } from 'react'
 import { GLOBALS_CONSTANTS } from '@/constants/globals'
 import { Button } from '@/components/ui/button'
 import { HelpText } from './ui/tooltip'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/shadcn'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

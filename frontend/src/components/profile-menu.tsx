@@ -9,7 +9,7 @@ import {
 import { useAuthStore } from '@/store/auth'
 import { Button } from './ui/button'
 import { ThemeToggle } from '@/theme/components/toggle-theme'
-import { Settings, User } from 'lucide-react'
+import { SunMoon, User } from 'lucide-react'
 
 export function ProfileDropdownMenu() {
   const { isAuthenticate, user } = useAuthStore((state) => {
@@ -26,7 +26,7 @@ export function ProfileDropdownMenu() {
           {isAuthenticate ? (
             <User className="size-4" />
           ) : (
-            <Settings className="size-4" />
+            <SunMoon className="size-4" />
           )}
         </Button>
       </DropdownMenuTrigger>
