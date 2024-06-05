@@ -8,7 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Entity(name = "course")
+@Entity
+@Table(name = "course")
 public class Course {
 
     @Id
@@ -21,6 +22,6 @@ public class Course {
     @NotNull
     private String slug;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.DETACH)
     private Set<User> userSet = new HashSet<>();
 }

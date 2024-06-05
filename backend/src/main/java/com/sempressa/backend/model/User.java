@@ -1,6 +1,6 @@
 package com.sempressa.backend.model;
 
-import com.sempressa.backend.domain.UserRole;
+import com.sempressa.backend.utils.domain.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Entity(name = "user")
+@Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -30,12 +31,13 @@ public class User {
     private Integer registration;
 
     @NotNull
+    @Enumerated(EnumType.ORDINAL)
     private UserRole role;
 
     private String photoUrl;
 
     @ManyToOne
-    @JoinColumn(name = "course")
+    @JoinColumn(name = "course_id")
     private Course course;
 
     @ManyToMany
@@ -43,6 +45,4 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "parallel_id"))
     private List<Parallel> parallel = new ArrayList<>();
-
-
 }
