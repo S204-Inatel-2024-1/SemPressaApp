@@ -49,6 +49,7 @@ public class UserService {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setName(user.getName());
+        userDTO.setPassword(user.getPassword());
         userDTO.setEmail(user.getEmail());
         userDTO.setRegistration(user.getRegistration());
         userDTO.setRole(user.getRole());
@@ -60,6 +61,7 @@ public class UserService {
         User user = new User();
         user.setId(userDTO.getId());
         user.setName(userDTO.getName());
+        user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
         user.setRegistration(userDTO.getRegistration());
         user.setRole(userDTO.getRole());
