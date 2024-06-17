@@ -68,4 +68,8 @@ public class UserService {
         user.setPhotoUrl(userDTO.getPhotoUrl());
         return user;
     }
+
+    public void deleteAllUsers(){
+        this.userRepository.deleteAll();
+    }
 }
