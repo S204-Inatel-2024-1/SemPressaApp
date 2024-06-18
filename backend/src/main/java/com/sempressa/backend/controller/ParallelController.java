@@ -12,12 +12,24 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/parallels")  // URL base para todos os métodos do controlador
 public class ParallelController {
 
     @Autowired
     private ParallelRepository parallelRepo;
 
-    @GetMapping("/getAllParallels")
+    @GetMapping("/{id}")
+    public ResponseEntity<Parallel> getParallelByID(@PathVariable Long id){
+        Optional<Parallel> parallelData = parallelRepo.findById(id);
+
+        if(parallelData.isPresent()){
+            return new ResponseEntity<>(parallelData.get(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping
     public ResponseEntity<List<Parallel>> getAllParallels(){
         try {
             List<Parallel> parallelsList = new ArrayList<>();
@@ -33,25 +45,14 @@ public class ParallelController {
         }
     }
 
-    @GetMapping("/getParallelByID/{id}")
-    public ResponseEntity<Parallel> getParallelByID(@PathVariable Long id){
-        Optional<Parallel> parallelData = parallelRepo.findById(id);
-
-        if(parallelData.isPresent()){
-            return new ResponseEntity<>(parallelData.get(), HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @PostMapping("/addParallel")
+    @PostMapping
     public ResponseEntity<Parallel> addParallel(@RequestBody Parallel parallel){
         Parallel parallelObj = parallelRepo.save(parallel);
 
         return new ResponseEntity<>(parallelObj, HttpStatus.CREATED);
     }
 
-    @PostMapping("/updateParallelByID/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Parallel> updateParallelByID(@PathVariable Long id, @RequestBody Parallel newParallelData){
         Optional<Parallel> oldParallelData = parallelRepo.findById(id);
 
@@ -66,12 +67,9 @@ public class ParallelController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/deleteParallelByID/{id}")
-    public ResponseEntity<Parallel> deleteParallelByID(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteParallelByID(@PathVariable Long id){
         parallelRepo.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
-
-
 }
