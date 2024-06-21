@@ -1,10 +1,7 @@
-package com.sempressa.backend.model;
+package com.sempressa.backend.domain.team;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity

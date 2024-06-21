@@ -1,9 +1,9 @@
 package com.sempressa.backend.service;
 
-import com.sempressa.backend.dto.UserDTO;
-import com.sempressa.backend.exceptions.ResourceNotFoundException;
-import com.sempressa.backend.model.User;
-import com.sempressa.backend.repository.UserRepository;
+import com.sempressa.backend.domain.user.dto.UserDTO;
+import com.sempressa.backend.infra.security.ResourceNotFoundException;
+import com.sempressa.backend.domain.user.User;
+import com.sempressa.backend.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
