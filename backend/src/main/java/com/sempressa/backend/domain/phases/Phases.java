@@ -1,4 +1,4 @@
-package com.sempressa.backend.model;
+package com.sempressa.backend.domain.phases;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

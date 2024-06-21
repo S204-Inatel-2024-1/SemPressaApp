@@ -1,4 +1,4 @@
-package com.sempressa.backend.utils.domain.enums;
+package com.sempressa.backend.domain.user;
 
 public enum UserRole {
     ADMIN, ADVISOR, STUDENT
