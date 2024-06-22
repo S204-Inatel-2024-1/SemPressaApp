@@ -1,6 +1,7 @@
 package com.sempressa.backend.controller;
 
-import com.sempressa.backend.domain.user.dto.UserDTO;
+import com.sempressa.backend.domain.user.User;
+import com.sempressa.backend.domain.user.UserDTO;
 import com.sempressa.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<UserDTO> getAllUsers() {
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 

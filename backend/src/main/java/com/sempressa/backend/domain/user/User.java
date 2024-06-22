@@ -1,13 +1,18 @@
 package com.sempressa.backend.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sempressa.backend.domain.course.Course;
 import com.sempressa.backend.domain.parallel.Parallel;
+import com.sempressa.backend.domain.team.Team;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -32,17 +37,21 @@ public class User {
     private Integer registration;
 
     @NotNull
-    @Enumerated(EnumType.ORDINAL)
-    private UserRole role;
+    private String role;
 
     private String photoUrl;
 
     @ManyToOne
     private Course course;
 
-    @ManyToMany
-    @JoinTable(name = "user_parallel", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "parallel_id"))
-    private List<Parallel> parallel = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "users", cascade = {CascadeType.ALL})
+    @JsonIgnoreProperties("users")
+    private List<Team> teams = new ArrayList<>();
+
+//    @ManyToMany
+//    @JoinTable(name = "user_parallel", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "parallel_id"))
+//    private List<Parallel> parallel = new ArrayList<>();
 
 
 }
