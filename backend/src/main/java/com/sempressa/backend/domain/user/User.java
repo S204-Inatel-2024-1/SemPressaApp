@@ -1,6 +1,7 @@
-package com.sempressa.backend.model;
+package com.sempressa.backend.domain.user;
 
-import com.sempressa.backend.utils.domain.enums.UserRole;
+import com.sempressa.backend.domain.course.Course;
+import com.sempressa.backend.domain.parallel.Parallel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

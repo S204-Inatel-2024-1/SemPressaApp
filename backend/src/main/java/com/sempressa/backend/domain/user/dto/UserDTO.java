@@ -1,6 +1,6 @@
-package com.sempressa.backend.dto;
+package com.sempressa.backend.domain.user.dto;
 
-import com.sempressa.backend.utils.domain.enums.UserRole;
+import com.sempressa.backend.domain.user.UserRole;
 import lombok.Data;
 
 @Data
