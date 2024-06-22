@@ -2,7 +2,13 @@ import { DataTable } from '@/components/table'
 import { projectColumns } from './table/columns'
 import { useEffect, useState, type FormEvent } from 'react'
 
-import { MoreHorizontal, Plus, Search } from 'lucide-react'
+import {
+  CirclePlus,
+  Download,
+  MoreHorizontal,
+  Search,
+  Upload,
+} from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -94,31 +100,38 @@ export function AdminHome() {
 
   return (
     <main className="h-[calc(100vh-52px)] w-screen p-16 pt-8 space-y-4">
-      <h1 className="text-slate-800 dark:text-slate-50 text-2xl font-semibold">
-        Listagem de equipes
-      </h1>
-      <div className="flex items-center justify-between">
+      <div className="flex items-end justify-between">
         <form
           onSubmit={(ev) => handleSearchTeamsByTitle(ev)}
           className="flex items-center space-x-4 w-96"
         >
-          <Label className="">Equipe</Label>
+          <Label className="text-app-light-label dark:text-white">Equipe</Label>
           <div className="relative w-full">
             <Search className="size-4 absolute top-1/2 -translate-y-1/2 left-3" />
             <Input
-              className="pl-10 w-full placeholder:italic"
+              className="pl-10 w-full placeholder:italic bg-app-light-input dark:bg-app-dark-blue-400/80 border-2 border-app-light-title dark:border-app-dark-blue-900"
               placeholder="Digite o nome da equipe..."
               value={query}
               onChange={(ev) => setQuery(ev.target.value)}
             />
           </div>
         </form>
-
+        <div className="flex flex-col items-start justify-center text-app-light-title font-bold dark:text-white">
+          <span className="text-3xl ml-3">Listagem de</span>
+          <span className="text-7xl italic uppercase -mt-2.5">Equipes</span>
+        </div>
         <div className="space-x-2">
-          <Button variant="outline" asChild>
+          <Button
+            variant="outline"
+            asChild
+            className="border-2 border-app-light-title/70 text-app-light-title font-bold dark:bg-white dark:border-white dark:text-slate-900 dark:hover:brightness-75"
+          >
             <div>
-              <Label htmlFor="import-file" className="cursor-pointer">
-                Importar
+              <Label
+                htmlFor="import-file"
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm cursor-pointer font-bold"
+              >
+                Importar <Upload className="size-4 ml-2.5" strokeWidth={3} />
               </Label>
               <Input
                 id="import-file"
@@ -128,12 +141,22 @@ export function AdminHome() {
               />
             </div>
           </Button>
-          <Button variant="outline" onClick={handleDownloadTemplate}>
-            Baixar Template
+          <Button
+            variant="outline"
+            onClick={handleDownloadTemplate}
+            className="border-2 border-app-light-title/70 text-app-light-title font-bold hover:text-app-light-title dark:bg-white dark:border-white dark:text-slate-900 dark:hover:brightness-75"
+          >
+            Baixar Template{' '}
+            <Download className="size-4 ml-2.5" strokeWidth={3} />
           </Button>
-          <Button variant="outline" asChild>
+          <Button
+            variant="outline"
+            asChild
+            className="border-2 border-app-light-title/70 text-white hover:text-app-light-title font-bold bg-app-light-title dark:bg-app-dark-blue-900 dark:border-app-dark-blue-900 dark:hover:text-white dark:hover:brightness-125"
+          >
             <Link to="/admin/teams/create">
-              Adicionar Equipe <Plus className="size-4 ml-2.5" />
+              Adicionar Equipe{' '}
+              <CirclePlus className="size-4 ml-2.5" strokeWidth={3} />
             </Link>
           </Button>
         </div>

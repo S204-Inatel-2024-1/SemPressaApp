@@ -38,10 +38,20 @@ module.exports = {
             },
             text: '#94A3B8',
           },
+          'table-cell': {
+            header: {
+              DEFAULT: '#FEFBF9',
+            },
+            body: {
+              DEFAULT: '#6C6E6E',
+              dark: '#31373F',
+            },
+          },
           light: {
             text: '#888582',
             title: '#605E5A',
             input: '#FFFDFC',
+            label: '#6C6E6E',
           },
         },
         primary: {

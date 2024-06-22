@@ -27,7 +27,7 @@ export function ProfileDropdownMenu() {
       <DropdownMenuTrigger>
         <Button variant="ghost">
           {isAuthenticate ? (
-            <User className="size-4" />
+            <User className="size-8" />
           ) : theme === 'light' ? (
             <Sun className="size-8 text-[#5D5B57]" />
           ) : (
