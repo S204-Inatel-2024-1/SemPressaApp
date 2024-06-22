@@ -47,14 +47,6 @@ export function ThemeToggle() {
         >
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setTheme('system')}
-          className={cn(
-            theme === 'system' && 'bg-accent text-accent-foreground',
-          )}
-        >
-          System
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

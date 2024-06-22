@@ -22,6 +22,17 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { RotateCw } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { AdminIcon } from '@/components/icons/admin-icon'
+import { StudentIcon } from '@/components/icons/student-icon'
+import { AdvisorIcon } from '@/components/icons/advisor-icon'
+
+import { AdminIcon as AdminLightIcon } from '@/components/icons/light/admin-icon'
+import { AdvisorIcon as AdvisorLightIcon } from '@/components/icons/light/advisor'
+import { StudentIcon as StudentLightIcon } from '@/components/icons/light/student'
+import { useTheme } from '@/theme/provider'
+
+import FetinLightLogo from '@/assets/light-logo.png'
+import FetinDarkLogo from '@/assets/dark-logo.png'
 
 const loginFormSchema = z.object({
   username: z
@@ -45,6 +56,7 @@ type LoginFormSchema = z.infer<typeof loginFormSchema>
 export function Login() {
   const [currentTab, setCurrentTab] = useState<string>('student')
   const navigate = useNavigate()
+  const { theme } = useTheme()
 
   const { login, user } = useAuthStore((state) => ({
     login: state.login,
@@ -105,26 +117,60 @@ export function Login() {
       value={currentTab}
       onValueChange={setCurrentTab}
     >
-      <TabsList className="grid grid-cols-3 w-full">
-        <TabsTrigger value="admin">Admin</TabsTrigger>
-        <TabsTrigger value="advisor">Orientador</TabsTrigger>
-        <TabsTrigger value="student">Estudante</TabsTrigger>
+      <div className="flex items-center justify-center w-full mb-6">
+        <img
+          src={theme === 'dark' ? FetinDarkLogo : FetinLightLogo}
+          className="w-96 self-center"
+          alt=""
+        />
+      </div>
+      <TabsList className="grid grid-cols-3 w-full dark:bg-app-dark-blue-500 bg-[#DCD3C9]/45">
+        <TabsTrigger
+          className="dark:data-[state=active]:bg-app-dark-blue-700 data-[state=active]:bg-[#FEFAF6]"
+          value="admin"
+        >
+          Administrador
+        </TabsTrigger>
+        <TabsTrigger
+          className="dark:data-[state=active]:bg-app-dark-blue-700 data-[state=active]:bg-[#FEFAF6]"
+          value="advisor"
+        >
+          Orientador
+        </TabsTrigger>
+        <TabsTrigger
+          className="dark:data-[state=active]:bg-app-dark-blue-700 data-[state=active]:bg-[#FEFAF6]"
+          value="student"
+        >
+          Estudante
+        </TabsTrigger>
       </TabsList>
       <TabsContent className="py-2" value="admin"></TabsContent>
       <TabsContent className="py-2" value="advisor"></TabsContent>
       <TabsContent className="py-2" value="student"></TabsContent>
-      <Card>
-        <CardHeader>
-          <CardTitle className="capitalize">{title}</CardTitle>
-          <CardDescription>
-            Entre com suas {currentTab} credenciais abaixo.
-          </CardDescription>
+      <Card className="dark:bg-app-dark-blue-600 bg-[#FEFAF6]/33 border-2 border-app-dark-blue-500">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div className="text-center">
+            <CardTitle className="capitalize text-4xl dark:text-white text-app-light-title">
+              {title}
+            </CardTitle>
+            <CardDescription className="dark:text-app-dark-text text-app-light-text">
+              Entre com suas {currentTab} credenciais abaixo.
+            </CardDescription>
+          </div>
+
+          {currentTab === 'admin' &&
+            (theme === 'dark' ? <AdminIcon /> : <AdminLightIcon />)}
+          {currentTab === 'advisor' &&
+            (theme === 'dark' ? <AdvisorIcon /> : <AdvisorLightIcon />)}
+          {currentTab === 'student' &&
+            (theme === 'dark' ? <StudentIcon /> : <StudentLightIcon />)}
         </CardHeader>
         <form onSubmit={form.handleSubmit(handleLogin, handleFormErrors)}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="admin-username">Usuário</Label>
               <Input
+                className="bg-app-light-input dark:bg-app-dark-blue-900 border-2 border-app-light-title dark:border-app-dark-blue-400"
                 id="admin-username"
                 placeholder="Entre com seu usuário"
                 {...form.register('username')}
@@ -133,6 +179,7 @@ export function Login() {
             <div className="space-y-2">
               <Label htmlFor="admin-password">Senha</Label>
               <Input
+                className="bg-app-light-input dark:bg-app-dark-blue-900 border-2 border-app-light-title dark:border-app-dark-blue-400"
                 type="password"
                 id="admin-password"
                 placeholder="Entre com sua senha"
@@ -141,7 +188,10 @@ export function Login() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button disabled={form.formState.isSubmitting} className="w-full">
+            <Button
+              disabled={form.formState.isSubmitting}
+              className="w-full text-white dark:bg-white dark:text-[#171923] bg-app-light-title font-bold"
+            >
               {form.formState.isSubmitting ? (
                 <RotateCw className="size-4 animate-spin" />
               ) : (
