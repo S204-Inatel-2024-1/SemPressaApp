@@ -1,7 +1,7 @@
 package com.sempressa.backend.service;
 
 import com.sempressa.backend.domain.user.dto.UserDTO;
-import com.sempressa.backend.infra.security.ResourceNotFoundException;
+import com.sempressa.backend.infra.exceptions.ResourceNotFoundException;
 import com.sempressa.backend.domain.user.User;
 import com.sempressa.backend.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class UserService {
             user.setRole(userDTO.getRole());
             user.setPhotoUrl(userDTO.getPhotoUrl());
             return convertToDTO(userRepository.save(user));
-        }).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        }).orElseThrow();
     }
 
     public void deleteUser(Long id) {
