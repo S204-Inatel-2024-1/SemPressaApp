@@ -1,8 +1,8 @@
 package com.sempressa.backend.controller;
 
 import com.sempressa.backend.dto.ParallelDTO;
-import com.sempressa.backend.model.Parallel;
-import com.sempressa.backend.repository.ParallelRepository;
+import com.sempressa.backend.domain.parallel.Parallel;
+import com.sempressa.backend.domain.user.ParallelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
