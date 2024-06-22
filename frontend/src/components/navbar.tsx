@@ -19,11 +19,11 @@ export function Navbar() {
   }))
 
   return (
-    <nav className="flex w-screen items-center py-2 justify-between px-4 overflow-x-hidden">
+    <nav className="flex w-screen items-center py-2 justify-between px-4 overflow-x-hidden absolute top-0 left-0 z-50">
       <div className="flex items-center justify-start gap-2">
         <Sheet>
           <SheetTrigger>
-            <Menu />
+            <Menu className="text-app-light-title size-8 dark:text-white" />
           </SheetTrigger>
           <SheetContent
             side="left"
@@ -95,8 +95,8 @@ export function Navbar() {
             </p>
           </SheetContent>
         </Sheet>
-        <span className="text-slate-800 dark:text-slate-50 font-semibold antialiased italic">
-          Inatel - Fetin
+        <span className="text-app-light-title text-xl font-sans dark:text-slate-50 antialiased italic font-bold">
+          Inatel
         </span>
       </div>
       <ProfileDropdownMenu />
