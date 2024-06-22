@@ -38,12 +38,11 @@ public class User {
     private String photoUrl;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
     private Course course;
 
     @ManyToMany
-    @JoinTable(name = "user_parallel",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "parallel_id"))
+    @JoinTable(name = "user_parallel", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "parallel_id"))
     private List<Parallel> parallel = new ArrayList<>();
+
+
 }
