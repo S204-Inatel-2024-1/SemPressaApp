@@ -1,6 +1,6 @@
 package com.sempressa.backend.domain.parallel;
 
-import com.sempressa.backend.dto.ParallelDTO;
+import com.sempressa.backend.domain.user.dto.ParallelDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -24,7 +24,6 @@ public class Parallel {
     @NotNull
     private String description;
 
-    // Convert entity to DTO
     public ParallelDTO toDTO() {
         ParallelDTO dto = new ParallelDTO();
         dto.setId(this.id);
@@ -33,16 +32,16 @@ public class Parallel {
         return dto;
     }
 
-    // Update entity from DTO
-    public void updateFromDTO(ParallelDTO dto) {
-        this.name = dto.getName();
-        this.description = dto.getDescription();
-    }
-
-    // Create entity from DTO
     public static Parallel fromDTO(ParallelDTO dto) {
         Parallel parallel = new Parallel();
-        parallel.updateFromDTO(dto);
+        parallel.setId(dto.getId());
+        parallel.setName(dto.getName());
+        parallel.setDescription(dto.getDescription());
         return parallel;
+    }
+
+    public void updateFromDTO(ParallelDTO dto) {
+        this.setName(dto.getName());
+        this.setDescription(dto.getDescription());
     }
 }

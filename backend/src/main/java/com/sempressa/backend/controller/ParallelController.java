@@ -1,6 +1,6 @@
 package com.sempressa.backend.controller;
 
-import com.sempressa.backend.dto.ParallelDTO;
+import com.sempressa.backend.domain.user.dto.ParallelDTO;
 import com.sempressa.backend.domain.parallel.Parallel;
 import com.sempressa.backend.domain.user.ParallelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,8 +34,7 @@ public class ParallelController {
     @GetMapping
     public ResponseEntity<List<ParallelDTO>> getAllParallels() {
         try {
-            List<Parallel> parallelsList = new ArrayList<>();
-            parallelRepo.findAll().forEach(parallelsList::add);
+            List<Parallel> parallelsList = parallelRepo.findAll();
 
             if (parallelsList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -74,7 +72,11 @@ public class ParallelController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteParallelByID(@PathVariable Long id) {
-        parallelRepo.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (parallelRepo.existsById(id)) {
+            parallelRepo.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
