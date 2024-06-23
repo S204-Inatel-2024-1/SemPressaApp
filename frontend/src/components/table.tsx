@@ -70,13 +70,13 @@ export function DataTable<TData, TValue>({
         <Table className="">
           <TableHeader className="h-11 border-b">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="overflow-hidden">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}
                       className={cn(
-                        'text-slate-700 dark:text-slate-100 h-full',
+                        'dark:text-slate-100 h-full bg-app-light-title/85 dark:bg-app-dark-blue-900 last:rounded-tr-md first:rounded-tl-md text-app-table-cell-header',
                         header.column.columnDef.id === 'actions' &&
                           'flex items-center gap-3 h-11 pt-0.5',
                       )}
@@ -103,6 +103,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
+                  className="even:bg-[#E5DBD1]/30 odd:bg-[#EBDACB]/70 dark:odd:bg-[#37384B]/30 dark:even:bg-app-table-cell-body-dark/70"
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -119,10 +120,10 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+              <TableRow className="even:bg-[#E5DBD1]/30 odd:bg-[#EBDACB]/70 dark:odd:bg-[#37384B]/30 dark:even:bg-app-table-cell-body-dark/70">
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-app-table-cell-body"
                 >
                   Não há projetos cadastrados.
                 </TableCell>
@@ -132,7 +133,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        <div className="flex-1 text-sm text-app-light-title font-semibold dark:text-white">
           Página {currentPage} de{' '}
           {Math.ceil(total / GLOBALS_CONSTANTS.LIMIT_OF_LIST)}
         </div>
@@ -149,7 +150,7 @@ export function DataTable<TData, TValue>({
               handleChangePage(pageToChange)
             }}
             disabled={!(currentPage > GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST)}
-            className="disabled:cursor-not-allowed"
+            className="disabled:cursor-not-allowed border-2 border-app-light-title/70 text-app-light-title hover:text-app-light-title font-bold dark:bg-white dark:border-white dark:text-slate-900 dark:hover:brightness-75"
           >
             Previous
           </Button>
@@ -172,7 +173,7 @@ export function DataTable<TData, TValue>({
             disabled={
               currentPage >= Math.ceil(total / GLOBALS_CONSTANTS.LIMIT_OF_LIST)
             }
-            className="disabled:cursor-not-allowed"
+            className="disabled:cursor-not-allowed border-2 border-app-light-title/70 text-app-light-title hover:text-app-light-title font-bold dark:bg-white dark:border-white dark:text-slate-900 dark:hover:brightness-75"
           >
             Next
           </Button>

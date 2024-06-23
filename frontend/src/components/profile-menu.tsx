@@ -25,9 +25,12 @@ export function ProfileDropdownMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button variant="ghost">
+        <Button
+          variant="ghost"
+          className="dark:bg-transparent dark:border-transparent"
+        >
           {isAuthenticate ? (
-            <User className="size-4" />
+            <User className="size-8 dark:text-white" />
           ) : theme === 'light' ? (
             <Sun className="size-8 text-[#5D5B57]" />
           ) : (
@@ -40,7 +43,7 @@ export function ProfileDropdownMenu() {
           <>
             <DropdownMenuLabel>{user?.name.slice(0, 16)}.</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Meu Perfil</DropdownMenuItem>
+            {/* <DropdownMenuItem>Meu Perfil</DropdownMenuItem> */}
           </>
         )}
         <DropdownMenuItem asChild>
