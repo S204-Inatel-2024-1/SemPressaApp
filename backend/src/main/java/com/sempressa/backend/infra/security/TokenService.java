@@ -25,6 +25,9 @@ public class TokenService {
             String token =  JWT.create()
                 .withIssuer("API sem Pressa App") //identificar a api que é dona da geração do token
                 .withSubject(user.getEmail())
+                    .withClaim("id", user.getId())
+                    .withClaim("role", user.getRole())
+                    .withClaim("name", user.getName())
                 .withExpiresAt(dataExpiracao())
                 .sign(algoritmo);
 
