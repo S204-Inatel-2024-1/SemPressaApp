@@ -1,15 +1,16 @@
-import { useNavigate, Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { useAuthStore } from '../store/auth'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Navbar } from '@/components/navbar'
 import { useTheme } from '@/theme/provider'
 
 import DarkBackground from '@/assets/dark-background.png'
 import LightBackground from '@/assets/light-background.png'
+import { toast } from 'sonner'
 
 export function RootLayout() {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const [isCheckingLoginState, setIsCheckingLoginState] =
+    useState<boolean>(true)
 
   const { theme } = useTheme()
 
@@ -22,15 +23,35 @@ export function RootLayout() {
 
   useEffect(() => {
     loadAuthCookie().then((isLogged) => {
-      if (!isLogged) navigate('/login')
-      if (location.pathname === '/login' && isLogged && user)
-        navigate(`/${user!.role}`, {
-          replace: true,
-        })
+      setIsCheckingLoginState(false)
+      if (['', '/'].includes(location.pathname))
+        window.location.replace('/login')
+      if (isLogged && user && location.pathname !== `/${user.role}`)
+        window.location.replace('/not-found')
+      if (!isLogged && location.pathname !== '/login')
+        window.location.replace('/login')
+      if (location.pathname === '/login' && isLogged && user) {
+        toast.info('Entrando...')
+
+        window.location.replace(`/${user!.role}`)
+      }
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadAuthCookie, navigate, location])
+  }, [loadAuthCookie, user])
+
+  if (isCheckingLoginState) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-[#f0f0f0] to-[#e0e0e0] dark:from-[#1a1a1a] dark:to-[#0f0f0f]">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent" />
+          <p className="text-muted-foreground text-lg">
+            Carregando, por favor espere..
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="dark:bg-app-dark-blue-800 bg-white w-screen h-screen overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-muted dark:scrollbar-track-muted-foreground dark:scrollbar-thumb-slate-800">
