@@ -1,6 +1,7 @@
 package com.sempressa.backend.infra.security;
 
 import com.sempressa.backend.domain.user.UserRepository;
+import com.sempressa.backend.service.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +23,19 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository usuarioRepository;
 
+     @Autowired
+    private AuthenticationService authService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var tokenJWT = recuperarToken(request);
 
         if(tokenJWT != null){
+             if (authService.isTokenBlacklisted(tokenJWT)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token está na lista negra");
+                return;
+            }
             var subject = tokenService.getSubject(tokenJWT);
             var usuario = usuarioRepository.findByEmail(subject);
 
