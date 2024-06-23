@@ -5,6 +5,8 @@ import com.sempressa.backend.domain.phases.PhasesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,7 @@ public class PhasesService {
     }
 
     public Phases save(Phases phases) {
+        updateIsActive(phases);
         return phasesRepository.save(phases);
     }
 
@@ -32,5 +35,25 @@ public class PhasesService {
 
     public boolean existsById(Long id) {
         return phasesRepository.existsById(id);
+    }
+
+    private void updateIsActive(Phases phases) {
+        // Obter a data atual em formato string
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String currentDateStr = LocalDate.now().format(formatter);
+
+        // Verificar se a data atual está entre startDate e endDate
+        if (phases.getStartDate().compareTo(currentDateStr) <= 0 && phases.getEndDate().compareTo(currentDateStr) >= 0) {
+            phases.setIsActive(true);
+        } else {
+            phases.setIsActive(false);
+
+            // Se não estiver ativo, verificar se há alguma próxima fase para ativar
+            Optional<Phases> nextPhase = phasesRepository.findAll().stream()
+                    .filter(p -> p.getId() > phases.getId() && p.getStartDate().compareTo(currentDateStr) > 0)
+                    .findFirst();
+
+            nextPhase.ifPresent(p -> p.setIsActive(true));
+        }
     }
 }
