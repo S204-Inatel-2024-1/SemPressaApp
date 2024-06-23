@@ -36,7 +36,7 @@ export function Navbar() {
                   <SheetDescription>Bem vindo {user?.name}!</SheetDescription>
                 )}
               </SheetHeader>
-              {isAuthenticated && (
+              {isAuthenticated && user?.role === 'admin' && (
                 <div className="w-full">
                   <Button
                     asChild
