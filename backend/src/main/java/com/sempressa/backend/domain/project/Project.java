@@ -26,4 +26,10 @@ public class Project {
 //            this.team = team;
 //        }
     }
+
+    public Project updateProject(UpdateProjectDTO projectDTO){
+        this.name = projectDTO.getName();
+        this.description = projectDTO.getDescription();
+        return this;
+    }
 }
