@@ -15,10 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TeamService {
@@ -53,7 +50,21 @@ public class TeamService {
         return teamRepository.findAll();
     }
 
-    public void updateTeam(TeamUpdateDTO updateDTO, Long id) {
-        Team team = teamRepository.getReferenceById(id);
+    @Transactional
+    public Team  updateTeam(TeamUpdateDTO updateDTO, Long id) {
+         Optional<Team> teamOptional = teamRepository.findById(id);
+
+        if (teamOptional.isEmpty()) {
+            throw new RuntimeException("Team not found");
+        }
+
+        Team team = teamOptional.get();
+        List<User> users = userRepository.findAllById(updateDTO.getUsersIds());
+        Optional<Project> project = projectRepository.findById(updateDTO.getProjectId());
+
+
+        team.updateTeam(updateDTO, project.get(), users);
+
+        return teamRepository.save(team);
     }
 }
