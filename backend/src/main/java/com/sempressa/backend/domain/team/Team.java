@@ -51,7 +51,11 @@ public class Team {
         this.users = users;
     }
 
-//    public updateTeam(TeamUpdateDTO){
-//
-//    }
+    public Team updateTeam(TeamUpdateDTO temUpdateDTO, Project project, List<User> users){
+        this.disqualifiedPhase = temUpdateDTO.getDisqualifiedPhase();
+        this.status = temUpdateDTO.getStatus();
+        this.project = project;
+        this.users = users;
+        return this;
+    }
 }

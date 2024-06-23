@@ -44,15 +44,17 @@ public class TeamController {
         return ResponseEntity.ok(pages);
     }
 
-//    @PutMapping("/{id}")
-//    @Transactional
-//    public ResponseEntity updateTeam(@RequestBody @Valid TeamUpdateDTO teamUpdateDTO, @PathVariable Long id){
-//        teamService.updateTeam(teamUpdateDTO, id);
-//        var teamUpdate = teamRepository.getReferenceById(id);
-//        medico.atualizarInformacoes(teamUpdate);
-//
-//        return ResponseEntity.ok( new DadosDetalhamentoMedico(medico));
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity updateTeam(@RequestBody @Valid TeamUpdateDTO teamUpdateDTO, @PathVariable Long id){
+        Team team = teamService.updateTeam(teamUpdateDTO, id);
+
+        return ResponseEntity.ok(team);
+    }
 
 
+    @DeleteMapping
+    public ResponseEntity deleteTeam(@PathVariable Long id){
+        teamRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
