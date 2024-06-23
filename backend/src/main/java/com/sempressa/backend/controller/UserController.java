@@ -2,6 +2,8 @@ package com.sempressa.backend.controller;
 
 import com.sempressa.backend.domain.user.UserDTO;
 import com.sempressa.backend.infra.security.ResourceNotFoundException;
+import com.sempressa.backend.domain.user.User;
+import com.sempressa.backend.domain.user.UserDTO;
 import com.sempressa.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<UserDTO> getAllUsers() {
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
@@ -35,12 +37,8 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        try {
-            UserDTO updatedUser = userService.updateUser(id, userDTO);
-            return ResponseEntity.ok(updatedUser);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        UserDTO updatedUser = userService.updateUser(id, userDTO);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")

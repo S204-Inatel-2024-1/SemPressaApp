@@ -39,7 +39,7 @@ export const useAuthStore = create<IAuthStore>((set) => {
         isLogged: true,
         user: {
           id: 1,
-          role: 'admin',
+          role: 'student',
           name: 'Pedro Augusto',
           email: 'pedro007augustobarbosa@gmail.com',
         },

@@ -36,21 +36,21 @@ export function Navbar() {
                   <SheetDescription>Bem vindo {user?.name}!</SheetDescription>
                 )}
               </SheetHeader>
-              {isAuthenticated && (
+              {isAuthenticated && user?.role === 'admin' && (
                 <div className="w-full">
                   <Button
                     asChild
                     className="w-full text-left justify-start rounded-none hover:shadow"
                     variant="ghost"
                   >
-                    <Link to="/admin/student">Alunos</Link>
+                    <Link to="/admin/students">Alunos</Link>
                   </Button>
                   <Button
                     asChild
                     className="w-full text-left justify-start rounded-none hover:shadow"
                     variant="ghost"
                   >
-                    <Link to="/admin/advisor">Orientadores</Link>
+                    <Link to="/admin/advisors">Orientadores</Link>
                   </Button>
                   <Button
                     asChild
@@ -71,7 +71,7 @@ export function Navbar() {
                     className="w-full text-left justify-start rounded-none hover:shadow"
                     variant="ghost"
                   >
-                    <Link to="/admin/parallel">Paralelas</Link>
+                    <Link to="/admin/parallels">Paralelas</Link>
                   </Button>
                   <Button
                     asChild
