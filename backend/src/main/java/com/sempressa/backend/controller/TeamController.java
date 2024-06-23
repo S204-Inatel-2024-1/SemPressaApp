@@ -3,11 +3,16 @@ package com.sempressa.backend.controller;
 import com.sempressa.backend.domain.team.Team;
 import com.sempressa.backend.domain.team.TeamDTO;
 import com.sempressa.backend.domain.team.TeamRepository;
+import com.sempressa.backend.domain.team.TeamUpdateDTO;
 import com.sempressa.backend.domain.user.User;
 import com.sempressa.backend.domain.user.UserRepository;
 import com.sempressa.backend.service.TeamService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,8 +27,6 @@ public class TeamController {
     private TeamService teamService;
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private TeamRepository teamRepository;
 
     @PostMapping
@@ -36,10 +39,20 @@ public class TeamController {
     }
 
     @GetMapping
-    public List<Team> getAllTeams() {
-        List<Team> team = teamRepository.findAll();
-        return team;
+    public ResponseEntity<Page<Team>> getAllTeams(@PageableDefault(size = 10, sort = {"name"}) Pageable page) {
+        var pages =  teamRepository.findAll(page)       ;
+        return ResponseEntity.ok(pages);
     }
+
+//    @PutMapping("/{id}")
+//    @Transactional
+//    public ResponseEntity updateTeam(@RequestBody @Valid TeamUpdateDTO teamUpdateDTO, @PathVariable Long id){
+//        teamService.updateTeam(teamUpdateDTO, id);
+//        var teamUpdate = teamRepository.getReferenceById(id);
+//        medico.atualizarInformacoes(teamUpdate);
+//
+//        return ResponseEntity.ok( new DadosDetalhamentoMedico(medico));
+//    }
 
 
 }

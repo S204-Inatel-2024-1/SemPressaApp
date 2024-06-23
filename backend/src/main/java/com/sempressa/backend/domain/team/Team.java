@@ -50,4 +50,8 @@ public class Team {
         this.project = project;
         this.users = users;
     }
+
+//    public updateTeam(TeamUpdateDTO){
+//
+//    }
 }
