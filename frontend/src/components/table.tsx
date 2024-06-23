@@ -133,7 +133,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-app-light-title font-semibold">
+        <div className="flex-1 text-sm text-app-light-title font-semibold dark:text-white">
           Página {currentPage} de{' '}
           {Math.ceil(total / GLOBALS_CONSTANTS.LIMIT_OF_LIST)}
         </div>

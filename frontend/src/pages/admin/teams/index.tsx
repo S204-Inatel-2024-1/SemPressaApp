@@ -1,31 +1,16 @@
-import { DataTable } from '@/components/table'
-import { projectColumns } from './table/columns'
 import { useEffect, useState, type FormEvent } from 'react'
 
-import {
-  CirclePlus,
-  Download,
-  MoreHorizontal,
-  Search,
-  Upload,
-} from 'lucide-react'
-
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { GLOBALS_CONSTANTS } from '@/constants/globals'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 import { useTeamStore } from '@/store/app/team'
 
 import * as XLSX from 'xlsx'
+import { GenericListPage } from '@/pages/generics/list'
+import { projectColumns } from './table/columns'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Download, Upload } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 
 export function AdminHome() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -45,7 +30,14 @@ export function AdminHome() {
 
   useEffect(() => {
     fetchTeams(query, initialCurrentPage)
-  }, [initialCurrentPage, fetchTeams, query])
+
+    setSearchParams((state) => {
+      state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
+      state.set('q', query)
+
+      return state
+    })
+  }, [initialCurrentPage, fetchTeams, query, setSearchParams])
 
   async function handleSearchTeamsByTitle(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -99,28 +91,22 @@ export function AdminHome() {
   }
 
   return (
-    <main className="h-[calc(100vh-52px)] w-screen p-16 pt-8 space-y-4">
-      <div className="flex items-end justify-between">
-        <form
-          onSubmit={(ev) => handleSearchTeamsByTitle(ev)}
-          className="flex items-center space-x-4 w-96"
-        >
-          <Label className="text-app-light-label dark:text-white">Equipe</Label>
-          <div className="relative w-full">
-            <Search className="size-4 absolute top-1/2 -translate-y-1/2 left-3" />
-            <Input
-              className="pl-10 w-full placeholder:italic bg-app-light-input dark:bg-app-dark-blue-400/80 border-2 border-app-light-title dark:border-app-dark-blue-900"
-              placeholder="Digite o nome da equipe..."
-              value={query}
-              onChange={(ev) => setQuery(ev.target.value)}
-            />
-          </div>
-        </form>
-        <div className="flex flex-col items-start justify-center text-app-light-title font-bold dark:text-white">
-          <span className="text-3xl ml-3">Listagem de</span>
-          <span className="text-7xl italic uppercase -mt-2.5">Equipes</span>
-        </div>
-        <div className="space-x-2">
+    <GenericListPage
+      entity="teams"
+      fetchFn={fetchTeams}
+      onSearchFilterInputChange={setQuery}
+      defaultQueryFilter={query}
+      deleteFn={deleteTeam}
+      totalOfData={totalOfTeams}
+      onSearchFilterSubmitForm={handleSearchTeamsByTitle}
+      columns={projectColumns}
+      data={teams}
+      entityName="Equipe"
+      searchInput={{
+        label: 'Equipe',
+      }}
+      extraActionButtons={
+        <>
           <Button
             variant="outline"
             asChild
@@ -149,56 +135,8 @@ export function AdminHome() {
             Baixar Template{' '}
             <Download className="size-4 ml-2.5" strokeWidth={3} />
           </Button>
-          <Button
-            variant="outline"
-            asChild
-            className="border-2 border-app-light-title/70 text-white hover:text-app-light-title font-bold bg-app-light-title dark:bg-app-dark-blue-900 dark:border-app-dark-blue-900 dark:hover:text-white dark:hover:brightness-125"
-          >
-            <Link to="/admin/teams/create">
-              Adicionar Equipe{' '}
-              <CirclePlus className="size-4 ml-2.5" strokeWidth={3} />
-            </Link>
-          </Button>
-        </div>
-      </div>
-      <DataTable
-        filter={{
-          q: query,
-        }}
-        fetchFn={async (page) => await fetchTeams(query, page)}
-        total={totalOfTeams}
-        columns={[
-          ...projectColumns,
-          {
-            id: 'actions',
-            header: 'Ações',
-            cell: ({ row }) => {
-              const project = row.original
-
-              return (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Ações</span>
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => deleteTeam(project.id)}>
-                      Deletar equipe
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>Atualizar Equipe</DropdownMenuItem>
-                    <DropdownMenuItem>Ver detalhes</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )
-            },
-          },
-        ]}
-        data={teams}
-      />
-    </main>
+        </>
+      }
+    />
   )
 }

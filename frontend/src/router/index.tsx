@@ -13,6 +13,15 @@ import { AdminCourseList } from '@/pages/admin/courses'
 import { AdminCourseForm } from '@/pages/admin/courses/form'
 import { AdminPhaseList } from '@/pages/admin/phases'
 import { AdminPhaseForm } from '@/pages/admin/phases/form'
+import { AdminTeamsFormPage } from '@/pages/admin/teams/form'
+import { AdminParallelsPage } from '@/pages/admin/parallels'
+import { AdminParallelFormPage } from '@/pages/admin/parallels/form'
+import { AdminProjectsPage } from '@/pages/admin/projects'
+import { AdminProjectFormPage } from '@/pages/admin/projects/form'
+import { AdminStudentsPage } from '@/pages/admin/student'
+import { AdminStudentFormPage } from '@/pages/admin/student/form'
+import { AdminAdvisorsPage } from '@/pages/admin/advisors'
+import { AdminAdvisorFormPage } from '@/pages/admin/advisors/form'
 
 export function Router() {
   const router = createBrowserRouter(
@@ -27,6 +36,20 @@ export function Router() {
 
             <Route path="phases" element={<AdminPhaseList />} />
             <Route path="phases/form" element={<AdminPhaseForm />} />
+
+            <Route path="teams/form" element={<AdminTeamsFormPage />} />
+
+            <Route path="parallels" element={<AdminParallelsPage />} />
+            <Route path="parallels/form" element={<AdminParallelFormPage />} />
+
+            <Route path="projects" element={<AdminProjectsPage />} />
+            <Route path="projects/form" element={<AdminProjectFormPage />} />
+
+            <Route path="students" element={<AdminStudentsPage />} />
+            <Route path="students/form" element={<AdminStudentFormPage />} />
+
+            <Route path="advisors" element={<AdminAdvisorsPage />} />
+            <Route path="advisors/form" element={<AdminAdvisorFormPage />} />
           </Route>
         </Route>
         <Route path="*" element={<ErrorLayout />}>
