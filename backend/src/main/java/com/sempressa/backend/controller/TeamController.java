@@ -44,6 +44,12 @@ public class TeamController {
         return ResponseEntity.ok(pages);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Team> getTeam(@PathVariable Long id) {
+        var team = teamRepository.findById(id).orElse(null);
+        return ResponseEntity.ok(team);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity updateTeam(@RequestBody @Valid TeamUpdateDTO teamUpdateDTO, @PathVariable Long id){
         Team team = teamService.updateTeam(teamUpdateDTO, id);
