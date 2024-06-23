@@ -23,6 +23,7 @@ import { AdminStudentFormPage } from '@/pages/admin/student/form'
 import { AdminAdvisorsPage } from '@/pages/admin/advisors'
 import { AdminAdvisorFormPage } from '@/pages/admin/advisors/form'
 import { StudentPage } from '@/pages/students/home'
+import { AdvisorHomePage } from '@/pages/advisor/home'
 
 export function Router() {
   const router = createBrowserRouter(
@@ -54,6 +55,9 @@ export function Router() {
           </Route>
           <Route path="/student">
             <Route index element={<StudentPage />} />
+          </Route>
+          <Route path="/advisor">
+            <Route index element={<AdvisorHomePage />} />
           </Route>
         </Route>
         <Route path="*" element={<ErrorLayout />}>
