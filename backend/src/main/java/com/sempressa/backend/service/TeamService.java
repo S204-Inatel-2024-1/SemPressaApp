@@ -5,6 +5,7 @@ import com.sempressa.backend.domain.project.ProjectRepository;
 import com.sempressa.backend.domain.team.Team;
 import com.sempressa.backend.domain.team.TeamDTO;
 import com.sempressa.backend.domain.team.TeamRepository;
+import com.sempressa.backend.domain.team.TeamUpdateDTO;
 import com.sempressa.backend.domain.user.User;
 import com.sempressa.backend.domain.user.UserRepository;
 import com.sempressa.backend.infra.exceptions.ResourceNotFoundException;
@@ -50,5 +51,9 @@ public class TeamService {
 
     public Object getAllTeams() {
         return teamRepository.findAll();
+    }
+
+    public void updateTeam(TeamUpdateDTO updateDTO, Long id) {
+        Team team = teamRepository.getReferenceById(id);
     }
 }
