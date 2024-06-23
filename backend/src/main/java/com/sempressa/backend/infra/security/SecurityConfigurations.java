@@ -1,5 +1,7 @@
 package com.sempressa.backend.infra.security;
 
+import com.sempressa.backend.service.AuthenticationService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import java.time.LocalDateTime;
 
 @Configuration
 @EnableWebSecurity
@@ -20,6 +26,9 @@ public class SecurityConfigurations {
 
     @Autowired
     private SecurityFilter securityFilter;
+
+    @Autowired
+    private AuthenticationService authService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,6 +39,11 @@ public class SecurityConfigurations {
                     req.requestMatchers(HttpMethod.POST, "/user").permitAll();
                     req.anyRequest().authenticated();
                 })
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .addLogoutHandler(logoutHandler())
+                        .logoutSuccessHandler(logoutSuccessHandler())
+                )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -43,5 +57,21 @@ public class SecurityConfigurations {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    private LogoutHandler logoutHandler() {
+        return (request, response, authentication) -> {
+            String token = request.getHeader("Authorization");
+            if (token != null && token.startsWith("Bearer ")) {
+                token = token.substring(7);
+                authService.addToBlacklist(token, LocalDateTime.now().plusHours(1));
+            }
+        };
+    }
+
+    private LogoutSuccessHandler logoutSuccessHandler() {
+        return (request, response, authentication) -> {
+            response.setStatus(HttpServletResponse.SC_OK);
+        };
     }
 }
