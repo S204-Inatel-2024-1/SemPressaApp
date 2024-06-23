@@ -1,6 +1,5 @@
 package com.sempressa.backend.infra.security;
 
-import com.sempressa.backend.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +16,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.sempressa.backend.service.AuthenticationService;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +37,8 @@ public class SecurityConfigurations {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http.cors().configurationSource(corsConfigurationSource()).and()
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/login").permitAll();
@@ -74,4 +80,17 @@ public class SecurityConfigurations {
             response.setStatus(HttpServletResponse.SC_OK);
         };
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(Arrays.asList("http://localhost:5174")); // Permitir a origem do seu front-end. Ajuste conforme necessário
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Permitir métodos HTTP específicos
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // Permitir cabeçalhos específicos
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
 }
