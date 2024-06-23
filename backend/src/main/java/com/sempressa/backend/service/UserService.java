@@ -4,6 +4,7 @@ import com.sempressa.backend.domain.user.UserDTO;
 import com.sempressa.backend.domain.user.User;
 import com.sempressa.backend.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -25,7 +29,12 @@ public class UserService {
     }
 
     public UserDTO createUser(UserDTO userDTO) {
+        // Codifica a senha
+        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        userDTO.setPassword(encodedPassword);
+
         User user = convertToEntity(userDTO);
+
         return convertToDTO(userRepository.save(user));
     }
 
