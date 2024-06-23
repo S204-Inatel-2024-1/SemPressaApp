@@ -1,6 +1,5 @@
 package com.sempressa.backend.domain.parallel;
 
-import com.sempressa.backend.domain.user.dto.ParallelDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
