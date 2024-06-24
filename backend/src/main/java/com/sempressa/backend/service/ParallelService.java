@@ -4,11 +4,11 @@ import com.sempressa.backend.domain.parallel.Parallel;
 import com.sempressa.backend.domain.parallel.ParallelDTO;
 import com.sempressa.backend.domain.parallel.ParallelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ParallelService {
@@ -16,10 +16,8 @@ public class ParallelService {
     @Autowired
     private ParallelRepository parallelRepository;
 
-    public List<ParallelDTO> findAll() {
-        return parallelRepository.findAll().stream()
-                .map(Parallel::toDTO)
-                .collect(Collectors.toList());
+    public Page<Parallel> findAll(Pageable pageable) {
+        return parallelRepository.findAll(pageable);
     }
 
     public Optional<ParallelDTO> findById(Long id) {

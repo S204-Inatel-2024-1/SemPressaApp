@@ -30,21 +30,17 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var tokenJWT = recuperarToken(request);
 
-        if(tokenJWT != null){
-            try {
-                if (authService.isTokenBlacklisted(tokenJWT)) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("Token está na lista negra");
-                    return;
-                }
-                var subject = tokenService.getSubject(tokenJWT);
-                var usuario = usuarioRepository.findByEmail(subject);
-
-                var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (Exception e) {
+        if(!tokenJWT.isEmpty()){
+            if (authService.isTokenBlacklisted(tokenJWT)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token está na lista negra");
                 return;
             }
+            var subject = tokenService.getSubject(tokenJWT);
+            var usuario = usuarioRepository.findByEmail(subject);
+
+            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         //filquerChain representa a cadeia de filtros

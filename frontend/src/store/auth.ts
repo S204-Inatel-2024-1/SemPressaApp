@@ -83,36 +83,41 @@ export const useAuthStore = create<IAuthStore>((set, get) => {
       // TODO - send credentials to backend
       console.log('Realizando login:', { role })
 
-      const response = await api.post('/login', {
-        email: user,
-        password,
-      })
-
-      if (response.status !== 200) {
-        toast.error('Credenciais Inválidas', {
-          description: 'Verifique suas credenciais e tente novamente',
-        })
-        return false
-      }
-
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { aud, exp, iat, iss, jti, nbf, ...userLogged } = jwt.decodeJwt<
-          jwt.JWTPayload & IUserLogged
-        >(response.data.token)
+        const response = await api.post('/login', {
+          email: user,
+          password,
+        })
 
-        userLogged.role = extractUserRole(userLogged.role)
-        userLogged.email = userLogged.sub!
-        set(() => ({
-          isLogged: true,
-          user: userLogged,
-        }))
+        if (response.status !== 200) {
+          toast.error('Credenciais Inválidas', {
+            description: 'Verifique suas credenciais e tente novamente',
+          })
+          return false
+        }
 
-        Cookie.set(AUTH_CONSTANTS.AUTH_PROPERTY_NAME, response.data.token)
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { aud, exp, iat, iss, jti, nbf, ...userLogged } = jwt.decodeJwt<
+            jwt.JWTPayload & IUserLogged
+          >(response.data.token)
 
-        return true
+          userLogged.role = extractUserRole(userLogged.role)
+          userLogged.email = userLogged.sub!
+          set(() => ({
+            isLogged: true,
+            user: userLogged,
+          }))
+
+          Cookie.set(AUTH_CONSTANTS.AUTH_PROPERTY_NAME, response.data.token)
+
+          return true
+        } catch {
+          toast.error('Não foi possível obter as informações usuário')
+          return false
+        }
       } catch {
-        toast.error('Não foi possível obter as informações usuário')
+        toast.error('Credenciais inválidas')
         return false
       }
     },

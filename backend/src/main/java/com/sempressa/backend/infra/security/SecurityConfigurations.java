@@ -87,7 +87,7 @@ public class SecurityConfigurations {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("*")); // Permitir a origem do seu front-end. Ajuste conforme necessário
+        config.setAllowedOrigins(List.of("http://localhost:5174/")); // Permitir a origem do seu front-end. Ajuste conforme necessário
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Permitir métodos HTTP específicos
         config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // Permitir cabeçalhos específicos
         source.registerCorsConfiguration("/**", config);

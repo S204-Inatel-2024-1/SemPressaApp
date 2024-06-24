@@ -1,8 +1,12 @@
 package com.sempressa.backend.controller;
 
+import com.sempressa.backend.domain.parallel.Parallel;
 import com.sempressa.backend.domain.parallel.ParallelDTO;
 import com.sempressa.backend.service.ParallelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +28,10 @@ public class ParallelController {
     }
 
     @GetMapping
-    public List<ParallelDTO> getAllParallels() {
-        return parallelService.findAll();
+    public ResponseEntity<Page<Parallel>> getAllParallels(@PageableDefault(size = 10, sort = {"name"}) Pageable pageable) {
+        var page = parallelService.findAll(pageable);
+
+        return ResponseEntity.ok(page);
     }
 
     @PostMapping
