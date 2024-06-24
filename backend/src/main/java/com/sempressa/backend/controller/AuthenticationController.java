@@ -35,8 +35,11 @@ public class AuthenticationController {
         var authentication = manager.authenticate(authenticationToken);
         System.out.println("Aqui ");
 
-        var tokenJWT = tokenService.gerarToken((User) authentication.getPrincipal());
-
-        return ResponseEntity.ok(new JWTTokenDTO(tokenJWT));
+        try {
+            var tokenJWT = tokenService.gerarToken((User) authentication.getPrincipal());
+            return ResponseEntity.ok(new JWTTokenDTO(tokenJWT));
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
