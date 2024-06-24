@@ -36,7 +36,7 @@ public class User implements UserDetails {
     @NotNull
     private Integer registration;
 
-    //    @ManyToMany
+//    @ManyToMany
 //    @JoinTable(name = "user_parallel", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "parallel_id"))
 //    private List<Parallel> parallel = new ArrayList<>();
 
@@ -45,9 +45,7 @@ public class User implements UserDetails {
 
     private String photoUrl;
 
-    @ManyToOne
-    private Course course;
-
+    private String course;
 
     @ManyToMany(mappedBy = "users", cascade = {CascadeType.ALL})
     @JsonIgnoreProperties("users")

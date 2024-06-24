@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -55,12 +54,14 @@ public class UserService {
 
     private UserDTO convertToDTO(User user) {
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
         userDTO.setName(user.getName());
         userDTO.setPassword(user.getPassword());
         userDTO.setEmail(user.getEmail());
         userDTO.setRegistration(user.getRegistration());
         userDTO.setRole(user.getRole());
+        if(user.getCourse() != null) {
+            userDTO.setCourse(user.getCourse());
+        }
         if(user.getPhotoUrl() != null) {
             userDTO.setPhotoUrl(user.getPhotoUrl());
         }
@@ -69,12 +70,14 @@ public class UserService {
 
     private User convertToEntity(UserDTO userDTO) {
         User user = new User();
-        user.setId(userDTO.getId());
         user.setPassword(userDTO.getPassword());
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setRegistration(userDTO.getRegistration());
         user.setRole(userDTO.getRole());
+        if(userDTO.getCourse() != null){
+            user.setCourse(userDTO.getCourse());
+        }
         if(userDTO.getPhotoUrl() != null){
             user.setPhotoUrl(userDTO.getPhotoUrl());
         }

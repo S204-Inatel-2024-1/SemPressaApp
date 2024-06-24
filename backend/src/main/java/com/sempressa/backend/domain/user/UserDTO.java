@@ -1,18 +1,15 @@
 package com.sempressa.backend.domain.user;
 
+import lombok.Data;
 import com.sempressa.backend.domain.team.Team;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Data;
-
 import java.util.Set;
 
 @Data
 public class UserDTO {
-
-    private Long id;
 
     @NotBlank(message = "Nome de usuario vazio")
     private String name;
@@ -31,6 +28,7 @@ public class UserDTO {
     @NotNull
     private String role = UserRole.STUDENT.name();
     private String photoUrl;
+    private String course;
 
     private Set<Team> teamIds;
 }
