@@ -1,0 +1,4 @@
+#Karate ignore
+/target
+.idea/
+venv
