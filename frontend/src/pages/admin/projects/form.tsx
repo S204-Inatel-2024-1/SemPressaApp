@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { GenericFormPage } from '@/pages/generics/form'
 import { useProjectStore } from '@/store/app/project'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -18,18 +18,28 @@ export function AdminProjectFormPage() {
   const [searchParams] = useSearchParams()
   const projectId = searchParams.get('id')
 
-  const { fetchProject } = useProjectStore((state) => {
-    return {
-      fetchProject: state.getProject,
-    }
-  })
+  const navigate = useNavigate()
+
+  const { fetchProject, createProject, updateProject } = useProjectStore(
+    (state) => {
+      return {
+        fetchProject: state.getProject,
+        createProject: state.create,
+        updateProject: state.updateProject,
+      }
+    },
+  )
 
   async function handleCreateProject({ name, description }: FormSchema) {
-    console.log({ name, description })
+    createProject({ name, description })
+
+    navigate('/admin/projects')
   }
 
   async function handleUpdateProject({ name, description }: FormSchema) {
-    console.log({ projectId, name, description })
+    updateProject({ id: Number(projectId!), name, description })
+
+    navigate('/admin/projects')
   }
 
   return (

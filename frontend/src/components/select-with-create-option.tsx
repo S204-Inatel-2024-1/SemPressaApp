@@ -48,7 +48,7 @@ interface SelectWithCreateOption {
   schema: any
   formFields: Field[]
   formTitle?: string
-  onCreateFunction: <T>(data: T) => Promise<void>
+  onCreateFunction: (data: any) => Promise<void>
   value?: string | null
   defaultValue?: string | null
   onChange: (value: string) => void

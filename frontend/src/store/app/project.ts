@@ -1,7 +1,6 @@
 import { create } from 'zustand'
-import { delay } from '@/utils/delay'
 import { toast } from 'sonner'
-import { GLOBALS_CONSTANTS } from '@/constants/globals'
+import { api } from '@/lib/api'
 
 interface IProject {
   id: number
@@ -12,9 +11,11 @@ interface IProject {
 interface IProjectStore {
   projects: IProject[]
   totalOfProjects: number
-  loadProjects: (query: string, pageIndex?: number) => Promise<void>
+  loadProjects: (pageIndex?: number, all?: boolean) => Promise<IProject[]>
   deleteProject: (projectId: number) => Promise<void>
   getProject: (projectId: number) => Promise<IProject | null>
+  create: (data: Omit<IProject, 'id'>) => Promise<boolean>
+  updateProject: (data: IProject) => Promise<boolean>
 }
 
 export const useProjectStore = create<IProjectStore>((set, get) => {
@@ -22,152 +23,71 @@ export const useProjectStore = create<IProjectStore>((set, get) => {
     projects: [],
     totalOfProjects: 0,
 
-    loadProjects: async (
-      query: string,
-      page = GLOBALS_CONSTANTS.LIMIT_OF_LIST,
-    ) => {
-      const projects = [
-        {
-          id: 1,
-          name: 'Introduction to Programming',
-          description: 'introduction-to-programming',
-        },
-        {
-          id: 2,
-          name: 'Advanced JavaScript',
-          description: 'advanced-javascript',
-        },
-        {
-          id: 3,
-          name: 'Data Structures',
-          description: 'data-structures',
-        },
-        {
-          id: 4,
-          name: 'Web Development Basics',
-          description: 'web-development-basics',
-        },
-        {
-          id: 5,
-          name: 'Machine Learning',
-          description: 'machine-learning',
-        },
-        {
-          id: 6,
-          name: 'Database Management',
-          description: 'database-management',
-        },
-        {
-          id: 7,
-          name: 'Software Engineering',
-          description: 'software-engineering',
-        },
-        {
-          id: 8,
-          name: 'Mobile App Development',
-          description: 'mobile-app-development',
-        },
-        {
-          id: 9,
-          name: 'Cyber Security',
-          description: 'cyber-security',
-        },
-        {
-          id: 10,
-          name: 'Cloud Computing',
-          description: 'cloud-computing',
-        },
-        {
-          id: 11,
-          name: 'Artificial Intelligence',
-          description: 'artificial-intelligence',
-        },
-        {
-          id: 12,
-          name: 'Computer Networks',
-          description: 'computer-networks',
-        },
-        {
-          id: 13,
-          name: 'Big Data Analytics',
-          description: 'big-data-analytics',
-        },
-        {
-          id: 14,
-          name: 'Operating Systems',
-          description: 'operating-systems',
-        },
-        {
-          id: 15,
-          name: 'Discrete Mathematics',
-          description: 'discrete-mathematics',
-        },
-        {
-          id: 16,
-          name: 'Game Development',
-          description: 'game-development',
-        },
-        {
-          id: 17,
-          name: 'Blockchain Technology',
-          description: 'blockchain-technology',
-        },
-        {
-          id: 18,
-          name: 'Natural Language Processing',
-          description: 'natural-language-processing',
-        },
-        {
-          id: 19,
-          name: 'Robotics',
-          description: 'robotics',
-        },
-        {
-          id: 20,
-          name: 'Quantum Computing',
-          description: 'quantum-computing',
-        },
-      ]
-      await delay(500)
+    loadProjects: async (page = 0, all = false) => {
+      let params = `?page=${page}&size=10`
+      if (all) params = `?page=${page}&size=10`
 
-      const start = (page - 1) * GLOBALS_CONSTANTS.LIMIT_OF_LIST
-      const end = start + GLOBALS_CONSTANTS.LIMIT_OF_LIST
-
-      const projectsToSet = projects.filter((project) =>
-        project.name.toLowerCase().includes(query.toLowerCase()),
-      )
+      const response = await api.get(`/project${params}`)
+      console.log(response.data)
 
       set(() => ({
-        projects: projectsToSet.slice(start, end),
-        totalOfProjects: projectsToSet.length,
+        projects: response.data.content,
+        totalOfProjects: response.data.totalElements,
       }))
+
+      return response.data.content as IProject[]
     },
 
     deleteProject: async (projectId: number) => {
       toast.info('Deletando Curso')
-      await delay(500)
-
-      const projects = get().projects.filter(
-        (project) => project.id !== projectId,
-      )
+      await api.delete(`/project/${projectId}`)
       toast.success('Curso Deletado')
 
-      set(() => ({
-        projects,
-        totalOfProjects: projects.length,
-      }))
-
-      toast.info('Recarregando página')
-      await delay(1000)
+      get().loadProjects(0, false)
     },
 
     getProject: async (projectId: number) => {
-      await delay(500)
+      const response = await api.get(`/project/${projectId}`)
 
-      return {
-        id: projectId,
-        name: 'Engenharia de Software',
-        description: 'engenharia-de-software',
+      return response.data
+    },
+    create: async ({ name, description }: Omit<IProject, 'id'>) => {
+      try {
+        const response = await api.post('/project', {
+          name,
+          description,
+        })
+
+        if (response.status !== 201) {
+          toast.error('Não foi possível criar o projeto')
+          return false
+        }
+
+        toast.success('Projeto criado com sucesso')
+        return true
+      } catch {
+        toast.error('Não foi possível criar o projeto')
+        return false
+      }
+    },
+
+    updateProject: async ({ name, description, id }: IProject) => {
+      try {
+        const response = await api.put(`/project/${id}`, {
+          name,
+          description,
+        })
+
+        if (response.status !== 200) {
+          toast.error('Não foi possível atualizar o projeto')
+          return false
+        }
+
+        toast.success('Projeto atualizado com sucesso')
+        return true
+      } catch {
+        toast.error('Não foi possível atualizar o projeto')
+        return false
       }
     },
   }

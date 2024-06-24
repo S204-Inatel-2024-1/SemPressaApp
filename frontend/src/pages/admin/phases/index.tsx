@@ -23,20 +23,20 @@ export function AdminPhaseList() {
   )
 
   useEffect(() => {
-    fetchPhases(query, initialCurrentPage)
-  }, [initialCurrentPage, fetchPhases, query])
+    fetchPhases(initialCurrentPage)
+  }, [initialCurrentPage, fetchPhases])
 
   async function handleSearchTeamsByTitle(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    setSearchParams((state) => {
-      state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
-      state.set('q', query)
+    // setSearchParams((state) => {
+    //   state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
+    //   state.set('q', query)
 
-      return state
-    })
+    //   return state
+    // })
 
-    location.reload()
+    // location.reload()
   }
 
   return (

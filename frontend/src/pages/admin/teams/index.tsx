@@ -29,15 +29,8 @@ export function AdminHome() {
   )
 
   useEffect(() => {
-    fetchTeams(query, initialCurrentPage)
-
-    setSearchParams((state) => {
-      state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
-      state.set('q', query)
-
-      return state
-    })
-  }, [initialCurrentPage, fetchTeams, query, setSearchParams])
+    fetchTeams(initialCurrentPage)
+  }, [initialCurrentPage, fetchTeams])
 
   async function handleSearchTeamsByTitle(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

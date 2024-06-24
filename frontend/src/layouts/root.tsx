@@ -26,7 +26,7 @@ export function RootLayout() {
       setIsCheckingLoginState(false)
       if (['', '/'].includes(location.pathname))
         window.location.replace('/login')
-      if (isLogged && user && location.pathname !== `/${user.role}`)
+      if (isLogged && user && !location.pathname.startsWith(`/${user.role}`))
         window.location.replace('/not-found')
       if (!isLogged && location.pathname !== '/login')
         window.location.replace('/login')

@@ -139,7 +139,11 @@ export function GenericFormPage({
           })}
 
           <div className="col-span-2 flex justify-end items-center gap-2">
-            <Button variant="asis" onClick={() => window.history.back()}>
+            <Button
+              type="button"
+              variant="asis"
+              onClick={() => window.history.back()}
+            >
               Voltar
             </Button>
             {['create', 'update'].includes(pageMode) && (

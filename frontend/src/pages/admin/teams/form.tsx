@@ -5,8 +5,12 @@ import MultipleSelector, {
 } from '@/components/ui/multi-select'
 import { Textarea } from '@/components/ui/textarea'
 import { GenericFormPage } from '@/pages/generics/form'
+import { useProjectStore } from '@/store/app/project'
 import { useTeamStore } from '@/store/app/team'
+import { useUserStore } from '@/store/app/user'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 interface SelectFieldInput {
@@ -46,7 +50,9 @@ const schema = z.object({
 })
 
 const projectSchema = z.object({
-  name: z.string(),
+  name: z.string({
+    message: 'Você deve preencher o nome do projeto',
+  }),
   description: z.string(),
 })
 
@@ -58,26 +64,58 @@ export function AdminTeamsFormPage() {
     fetchTeam: state.getTeam,
   }))
 
-  const projects = [
-    {
-      value: 'test1',
-      text: 'Test 1',
+  const { fetchProjects, projects, createProject } = useProjectStore(
+    (state) => {
+      return {
+        fetchProjects: state.loadProjects,
+        projects: state.projects,
+        createProject: state.create,
+      }
     },
-  ]
+  )
 
-  const users = [
-    { label: 'nextjs', value: 'Nextjs' },
-    { label: 'Vite', value: 'vite', disable: true },
-    { label: 'Nuxt', value: 'nuxt', disable: true },
-    { label: 'Vue', value: 'vue, disable: true', disable: true },
-    { label: 'Remix', value: 'remix' },
-    { label: 'Svelte', value: 'svelte', disable: true },
-    { label: 'Angular', value: 'angular', disable: true },
-    { label: 'Ember', value: 'ember', disable: true },
-    { label: 'React', value: 'react' },
-    { label: 'Gatsby', value: 'gatsby', disable: true },
-    { label: 'Astro', value: 'astro', disable: true },
-  ]
+  const { fetchStudents, users } = useUserStore((state) => {
+    return {
+      fetchStudents: () => state.loadUsers('student', 0, true),
+      users: state.users,
+    }
+  })
+
+  const [projectsToShow, setProjectsToShow] = useState(
+    projects.map((proj) => ({
+      text: proj.name,
+      value: proj.id.toString(),
+    })),
+  )
+
+  const [usersToShow, setUsersToShow] = useState(
+    users.map((proj) => ({
+      label: proj.name,
+      value: proj.id.toString(),
+    })),
+  )
+
+  useEffect(() => {
+    toast.info('Carregando Projetos')
+    fetchProjects(0, true).then((response) => {
+      setProjectsToShow(
+        response.map((proj) => ({
+          text: proj.name,
+          value: proj.id.toString(),
+        })),
+      )
+    })
+
+    toast.info('Carregando Estudantes')
+    fetchStudents().then((response) => {
+      setUsersToShow(
+        response.map((proj) => ({
+          label: proj.name,
+          value: proj.id.toString(),
+        })),
+      )
+    })
+  }, [])
 
   return (
     <GenericFormPage
@@ -115,11 +153,18 @@ export function AdminTeamsFormPage() {
                     },
                   },
                 ]}
-                options={projects}
+                options={projectsToShow}
                 schema={projectSchema}
                 formTitle="Criar Projeto"
-                onCreateFunction={async (d) => {
-                  console.log(d)
+                onCreateFunction={async (data) => {
+                  await createProject(data)
+                  const response = await fetchProjects(0, false)
+                  setProjectsToShow(
+                    response.map((proj) => ({
+                      text: proj.name,
+                      value: proj.id.toString(),
+                    })),
+                  )
                 }}
                 {...props}
               />
@@ -136,7 +181,7 @@ export function AdminTeamsFormPage() {
             <MultipleSelector
               badgeClassName="rounded-sm"
               placeholder="Selecione os membros da equipe"
-              options={users}
+              options={usersToShow}
               maxSelected={4}
               hidePlaceholderWhenSelected
               {...props}

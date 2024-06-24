@@ -22,15 +22,8 @@ export function AdminStudentsPage() {
   )
 
   useEffect(() => {
-    fetchUsers(query, initialCurrentPage)
-
-    setSearchParams((state) => {
-      state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
-      state.set('q', query)
-
-      return state
-    })
-  }, [initialCurrentPage, fetchUsers, query, setSearchParams])
+    fetchUsers('student', initialCurrentPage)
+  }, [initialCurrentPage, fetchUsers])
 
   async function handleSearchUsersByTitle(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -51,7 +44,9 @@ export function AdminStudentsPage() {
       data={users}
       deleteFn={deleteUser}
       entity="students"
-      fetchFn={fetchUsers}
+      fetchFn={async (page, all) => {
+        await fetchUsers('student', page, all)
+      }}
       onSearchFilterInputChange={setQuery}
       onSearchFilterSubmitForm={handleSearchUsersByTitle}
       totalOfData={totalOfUsers}

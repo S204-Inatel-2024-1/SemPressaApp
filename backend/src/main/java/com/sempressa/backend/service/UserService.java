@@ -4,9 +4,11 @@ import com.sempressa.backend.domain.user.UserDTO;
 import com.sempressa.backend.domain.user.User;
 import com.sempressa.backend.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,10 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public Page<User> getUsersByRole(String userRole, Pageable pageable) {
+        return this.userRepository.findAllByRole(userRole, (org.springframework.data.domain.Pageable) pageable);
     }
 
     public Optional<UserDTO> getUserById(Long id) {
@@ -71,6 +77,7 @@ public class UserService {
 
     private User convertToEntity(UserDTO userDTO) {
         User user = new User();
+        user.setId(userDTO.getId());
         user.setPassword(userDTO.getPassword());
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());

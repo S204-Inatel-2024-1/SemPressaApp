@@ -21,15 +21,15 @@ export function AdminParallelsPage() {
   )
 
   useEffect(() => {
-    fetchParallels(query, initialCurrentPage)
+    fetchParallels(initialCurrentPage)
 
-    setSearchParams((state) => {
-      state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
-      state.set('q', query)
+    // setSearchParams((state) => {
+    //   state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
+    //   state.set('q', query)
 
-      return state
-    })
-  }, [initialCurrentPage, fetchParallels, query, setSearchParams])
+    //   return state
+    // })
+  }, [initialCurrentPage, fetchParallels])
 
   async function handleSearchParallelsByTitle(
     event: FormEvent<HTMLFormElement>,
