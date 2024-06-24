@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { GenericFormPage } from '@/pages/generics/form'
 import { useParallelStore } from '@/store/app/parallel'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -18,18 +18,32 @@ export function AdminParallelFormPage() {
   const [searchParams] = useSearchParams()
   const parallelId = searchParams.get('id')
 
-  const { fetchParallel } = useParallelStore((state) => {
-    return {
-      fetchParallel: state.getParallel,
-    }
-  })
+  const navigate = useNavigate()
+
+  const { fetchParallel, updateParallel, createParallel } = useParallelStore(
+    (state) => {
+      return {
+        fetchParallel: state.getParallel,
+        createParallel: state.createParallel,
+        updateParallel: state.updateParallel,
+      }
+    },
+  )
 
   async function handleCreateParallel({ name, description }: FormSchema) {
-    console.log({ name, description })
+    const result = await createParallel({ name, description })
+
+    if (result) navigate('/admin/parallels')
   }
 
   async function handleUpdateParallel({ name, description }: FormSchema) {
-    console.log({ parallelId, name, description })
+    const result = await updateParallel({
+      id: Number(parallelId),
+      name,
+      description,
+    })
+
+    if (result) navigate('/admin/parallels')
   }
 
   return (

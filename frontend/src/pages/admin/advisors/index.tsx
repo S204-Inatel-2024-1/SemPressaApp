@@ -22,15 +22,15 @@ export function AdminAdvisorsPage() {
   )
 
   useEffect(() => {
-    fetchUsers(query, initialCurrentPage)
+    fetchUsers('advisor', initialCurrentPage)
 
-    setSearchParams((state) => {
-      state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
-      state.set('q', query)
+    // setSearchParams((state) => {
+    //   state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
+    //   state.set('q', query)
 
-      return state
-    })
-  }, [initialCurrentPage, fetchUsers, query, setSearchParams])
+    //   return state
+    // })
+  }, [initialCurrentPage, fetchUsers])
 
   async function handleSearchUsersByTitle(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

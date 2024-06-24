@@ -149,7 +149,7 @@ export function DataTable<TData, TValue>({
 
               handleChangePage(pageToChange)
             }}
-            disabled={!(currentPage > GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST)}
+            disabled={!(currentPage > 0)}
             className="disabled:cursor-not-allowed border-2 border-app-light-title/70 text-app-light-title hover:text-app-light-title font-bold dark:bg-white dark:border-white dark:text-slate-900 dark:hover:brightness-75"
           >
             Previous
@@ -170,9 +170,7 @@ export function DataTable<TData, TValue>({
 
               handleChangePage(pageToChange)
             }}
-            disabled={
-              currentPage >= Math.ceil(total / GLOBALS_CONSTANTS.LIMIT_OF_LIST)
-            }
+            disabled={currentPage + 1 >= Math.floor(total / 10)}
             className="disabled:cursor-not-allowed border-2 border-app-light-title/70 text-app-light-title hover:text-app-light-title font-bold dark:bg-white dark:border-white dark:text-slate-900 dark:hover:brightness-75"
           >
             Next

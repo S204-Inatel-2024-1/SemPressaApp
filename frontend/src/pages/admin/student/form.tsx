@@ -1,15 +1,8 @@
-import { SelectWithCreateOption } from '@/components/select-with-create-option'
 import { Input } from '@/components/ui/input'
 import { GenericFormPage } from '@/pages/generics/form'
 import { useUserStore } from '@/store/app/user'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
-
-interface SelectFieldInput {
-  value?: string | null
-  defaultValue?: string | null
-  onChange: (value: string) => void
-}
 
 const formSchema = z.object({
   role: z.string().optional().default('STUDENT'),
@@ -29,22 +22,9 @@ const formSchema = z.object({
   password: z.string({
     message: 'Insira uma senha para o aluno',
   }),
-})
-
-const courseSchema = z.object({
-  name: z
-    .string({ required_error: 'Você precisa adicionar o nome do Curso!' })
-    .min(1, {
-      message: 'Você precisa adicionar o nome do Curso!',
-    }),
-  slug: z
-    .string({
-      required_error: 'É necessário que o curso tenha um slug',
-    })
-    .min(3, {
-      message:
-        'É necessário que o curso tenha um slug com pelo menos 3 caracteres',
-    }),
+  course: z.string({
+    message: 'É necessário colocar o curso do estudante',
+  }),
 })
 
 type FormSchema = z.infer<typeof formSchema>
@@ -53,16 +33,13 @@ export function AdminStudentFormPage() {
   const [searchParams] = useSearchParams()
   const userId = searchParams.get('id')
 
-  const courses = [
-    {
-      value: 'test1',
-      text: 'Test 1',
-    },
-  ]
+  const navigate = useNavigate()
 
-  const { fetchUser } = useUserStore((state) => {
+  const { fetchUser, createStudent, updateStudent } = useUserStore((state) => {
     return {
       fetchUser: state.getUser,
+      createStudent: state.createStudent,
+      updateStudent: state.updateStudent,
     }
   })
 
@@ -72,8 +49,19 @@ export function AdminStudentFormPage() {
     password,
     registration,
     role,
+    course,
   }: FormSchema) {
-    console.log({ name, email, password, registration, role })
+    const result = await createStudent({
+      name,
+      email,
+      password,
+      registration,
+      role,
+      course,
+    })
+    if (result) {
+      navigate('/admin/students')
+    }
   }
 
   async function handleUpdateUser({
@@ -82,8 +70,20 @@ export function AdminStudentFormPage() {
     password,
     registration,
     role,
+    course,
   }: FormSchema) {
-    console.log({ userId, name, email, password, registration, role })
+    const result = await updateStudent({
+      id: Number(userId),
+      name,
+      email,
+      password,
+      registration,
+      role,
+      course,
+    })
+    if (result) {
+      navigate('/admin/students')
+    }
   }
 
   return (
@@ -131,40 +131,7 @@ export function AdminStudentFormPage() {
         },
         {
           name: 'course',
-          element: (props: SelectFieldInput) => {
-            return (
-              <SelectWithCreateOption
-                formFields={[
-                  {
-                    name: 'name',
-                    element: Input,
-                    args: {
-                      placeholder: 'Nome do curso..',
-                    },
-                    helpText: 'Nome do curso.',
-                    label: 'Nome',
-                  },
-                  {
-                    name: 'slug',
-                    element: Input,
-                    args: {
-                      placeholder: 'Slug do curso..',
-                    },
-                    helpText:
-                      'Uma forma facilitada para realizar operações com o curso, como importação de dados entre outros..',
-                    label: 'Slug',
-                  },
-                ]}
-                options={courses}
-                schema={courseSchema}
-                formTitle="Criar Curso"
-                onCreateFunction={async (d) => {
-                  console.log(d)
-                }}
-                {...props}
-              />
-            )
-          },
+          element: Input,
           label: 'Curso',
           args: {
             placeholder: 'Busque pelo curso..',

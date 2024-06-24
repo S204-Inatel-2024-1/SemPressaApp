@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Data
 public class UserDTO {
+    public Long id;
 
     private Long id;
 

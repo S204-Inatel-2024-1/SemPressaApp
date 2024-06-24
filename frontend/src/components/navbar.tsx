@@ -59,13 +59,13 @@ export function Navbar() {
                   >
                     <Link to="/admin/phases">Fases da Fetin</Link>
                   </Button>
-                  <Button
+                  {/* <Button
                     asChild
                     className="w-full text-left justify-start rounded-none hover:shadow"
                     variant="ghost"
                   >
                     <Link to="/admin/courses">Cursos</Link>
-                  </Button>
+                  </Button> */}
                   <Button
                     asChild
                     className="w-full text-left justify-start rounded-none hover:shadow"

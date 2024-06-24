@@ -2,7 +2,7 @@
 import { DataTable } from '@/components/table'
 import { type ComponentProps, type FormEvent, type ReactNode } from 'react'
 
-import { CirclePlus, MoreHorizontal, Search } from 'lucide-react'
+import { CirclePlus, MoreHorizontal } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -14,8 +14,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Link, useNavigate } from 'react-router-dom'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 
 type BaseModelType<T = unknown> = T & {
   id: unknown
@@ -26,7 +24,7 @@ interface GenericListPageProps {
   columns: any
   totalOfData: number
   deleteFn: (dataId: number) => Promise<void>
-  fetchFn: (query: string, page: number) => Promise<void>
+  fetchFn: (page: number, all?: boolean) => Promise<void>
   onSearchFilterSubmitForm: (event: FormEvent<HTMLFormElement>) => Promise<void>
   onSearchFilterInputChange: (filter: string) => void
   defaultQueryFilter?: string | null
@@ -48,16 +46,13 @@ export function GenericListPage({
   deleteFn,
   fetchFn,
   entity,
-  onSearchFilterSubmitForm,
-  onSearchFilterInputChange,
-  searchInput = {},
 }: GenericListPageProps) {
   const navigate = useNavigate()
 
   return (
     <main className="h-[calc(100vh-52px)] w-screen p-16 pt-8 space-y-4">
       <div className="flex items-end justify-between">
-        <form
+        {/* <form
           onSubmit={(ev) => onSearchFilterSubmitForm(ev)}
           className="flex items-center space-x-4 w-96"
         >
@@ -76,7 +71,7 @@ export function GenericListPage({
               {...searchInput}
             />
           </div>
-        </form>
+        </form> */}
         {entityName && (
           <div className="flex flex-col items-start justify-center text-app-light-title font-bold dark:text-white">
             <span className="text-3xl ml-3">Listagem de</span>
@@ -103,7 +98,7 @@ export function GenericListPage({
         filter={{
           q: defaultQueryFilter ?? '',
         }}
-        fetchFn={async (page) => await fetchFn(defaultQueryFilter ?? '', page)}
+        fetchFn={async (page) => await fetchFn(page)}
         total={totalOfData}
         columns={[
           ...columns,

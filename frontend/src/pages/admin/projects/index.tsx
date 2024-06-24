@@ -16,20 +16,18 @@ export function AdminProjectsPage() {
     }))
 
   const [query, setQuery] = useState(searchParams.get('q') ?? '')
-  const initialCurrentPage = Number(
-    searchParams.get('page') ?? GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST,
-  )
+  const initialCurrentPage = Number(searchParams.get('page') ?? 0)
 
   useEffect(() => {
-    fetchProjects(query, initialCurrentPage)
+    fetchProjects(initialCurrentPage)
 
-    setSearchParams((state) => {
-      state.set('page', String(GLOBALS_CONSTANTS.INITIAL_PAGE_OF_LIST))
-      state.set('q', query)
+    // setSearchParams((state) => {
+    //   state.set('page', `${initialCurrentPage + 1}`)
+    //   state.set('q', query)
 
-      return state
-    })
-  }, [initialCurrentPage, fetchProjects, query, setSearchParams])
+    //   return state
+    // })
+  }, [initialCurrentPage, fetchProjects])
 
   async function handleSearchProjectsByTitle(
     event: FormEvent<HTMLFormElement>,
@@ -52,7 +50,9 @@ export function AdminProjectsPage() {
       data={projects}
       deleteFn={deleteProject}
       entity="projects"
-      fetchFn={fetchProjects}
+      fetchFn={async (page, all) => {
+        await fetchProjects(page, all)
+      }}
       onSearchFilterInputChange={setQuery}
       onSearchFilterSubmitForm={handleSearchProjectsByTitle}
       totalOfData={totalOfProjects}

@@ -9,8 +9,6 @@ import { Login } from '../pages/login'
 import { RootLayout } from '../layouts/root'
 import NotFoundPage from '@/pages/not-found'
 import { ErrorLayout } from '@/layouts/error-layout'
-import { AdminCourseList } from '@/pages/admin/courses'
-import { AdminCourseForm } from '@/pages/admin/courses/form'
 import { AdminPhaseList } from '@/pages/admin/phases'
 import { AdminPhaseForm } from '@/pages/admin/phases/form'
 import { AdminTeamsFormPage } from '@/pages/admin/teams/form'
@@ -33,8 +31,6 @@ export function Router() {
           <Route path="/login" element={<Login />} />
           <Route path="/admin">
             <Route index element={<AdminHome />} />
-            <Route path="courses" element={<AdminCourseList />} />
-            <Route path="courses/form" element={<AdminCourseForm />} />
 
             <Route path="phases" element={<AdminPhaseList />} />
             <Route path="phases/form" element={<AdminPhaseForm />} />
