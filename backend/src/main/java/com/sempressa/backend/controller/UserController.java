@@ -1,9 +1,7 @@
 package com.sempressa.backend.controller;
 
 import com.sempressa.backend.domain.user.UserDTO;
-import com.sempressa.backend.infra.security.ResourceNotFoundException;
 import com.sempressa.backend.domain.user.User;
-import com.sempressa.backend.domain.user.UserDTO;
 import com.sempressa.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
