@@ -28,6 +28,7 @@ public class UserDTO {
     @NotNull
     private String role = UserRole.STUDENT.name();
     private String photoUrl;
+    private String course;
 
     private Set<Team> teamIds;
 }

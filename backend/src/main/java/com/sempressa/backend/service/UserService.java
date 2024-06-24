@@ -59,6 +59,9 @@ public class UserService {
         userDTO.setEmail(user.getEmail());
         userDTO.setRegistration(user.getRegistration());
         userDTO.setRole(user.getRole());
+        if(user.getCourse() != null) {
+            userDTO.setCourse(user.getCourse());
+        }
         if(user.getPhotoUrl() != null) {
             userDTO.setPhotoUrl(user.getPhotoUrl());
         }
@@ -72,6 +75,9 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setRegistration(userDTO.getRegistration());
         user.setRole(userDTO.getRole());
+        if(userDTO.getCourse() != null){
+            user.setCourse(userDTO.getCourse());
+        }
         if(userDTO.getPhotoUrl() != null){
             user.setPhotoUrl(userDTO.getPhotoUrl());
         }

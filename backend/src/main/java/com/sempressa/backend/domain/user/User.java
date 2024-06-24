@@ -45,9 +45,7 @@ public class User implements UserDetails {
 
     private String photoUrl;
 
-    @ManyToOne
-    private Course course;
-
+    private String course;
 
     @ManyToMany(mappedBy = "users", cascade = {CascadeType.ALL})
     @JsonIgnoreProperties("users")
