@@ -11,6 +11,8 @@ import java.util.Set;
 @Data
 public class UserDTO {
 
+    private Long id;
+
     @NotBlank(message = "Nome de usuario vazio")
     private String name;
 
