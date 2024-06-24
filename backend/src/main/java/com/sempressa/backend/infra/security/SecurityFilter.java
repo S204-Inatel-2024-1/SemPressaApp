@@ -31,16 +31,20 @@ public class SecurityFilter extends OncePerRequestFilter {
         var tokenJWT = recuperarToken(request);
 
         if(tokenJWT != null){
-             if (authService.isTokenBlacklisted(tokenJWT)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token está na lista negra");
+            try {
+                if (authService.isTokenBlacklisted(tokenJWT)) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Token está na lista negra");
+                    return;
+                }
+                var subject = tokenService.getSubject(tokenJWT);
+                var usuario = usuarioRepository.findByEmail(subject);
+
+                var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception e) {
                 return;
             }
-            var subject = tokenService.getSubject(tokenJWT);
-            var usuario = usuarioRepository.findByEmail(subject);
-
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         //filquerChain representa a cadeia de filtros
@@ -50,12 +54,16 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private String recuperarToken(HttpServletRequest request) {
         //peguei o token
-        var authorizationHeader = request.getHeader("Authorization");
+        try {
+            var authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader != null) {
-            return authorizationHeader.replace("Bearer ", "");
+            if (authorizationHeader != null) {
+                return authorizationHeader.replace("Bearer ", "");
+            }
+
+            return "";
+        } catch (Exception e) {
+            return "";
         }
-
-        return null;
     }
 }
