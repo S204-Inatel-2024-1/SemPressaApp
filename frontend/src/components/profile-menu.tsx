@@ -13,10 +13,11 @@ import { Sun, User } from 'lucide-react'
 import { useTheme } from '@/theme/provider'
 
 export function ProfileDropdownMenu() {
-  const { isAuthenticate, user } = useAuthStore((state) => {
+  const { isAuthenticate, user, logout } = useAuthStore((state) => {
     return {
       isAuthenticate: state.isLogged,
       user: state.user,
+      logout: state.logout,
     }
   })
 
@@ -52,7 +53,16 @@ export function ProfileDropdownMenu() {
         {isAuthenticate && (
           <>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Sair</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async function () {
+                const isLogoutSuccess = await logout()
+                if (isLogoutSuccess) {
+                  window.location.replace('/login')
+                }
+              }}
+            >
+              Sair
+            </DropdownMenuItem>
           </>
         )}
       </DropdownMenuContent>
