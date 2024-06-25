@@ -4,7 +4,7 @@ import com.intuit.karate.junit5.Karate;
 
 public class parallelRunner {
     @Karate.Test
-    Karate testLogin() {
+    Karate testParallel() {
         return Karate.run("parallel").relativeTo(getClass());
     }
 }

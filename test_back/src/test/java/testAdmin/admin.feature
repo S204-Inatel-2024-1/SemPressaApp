@@ -1,75 +1,128 @@
 Feature: Testando Admin
 
+    Background:
+        * def url_origin = "http://localhost:8080"
+        * def admin = 
+        """
+        {"name": "admin", "email": "admin309@inatel.br", "password": "admin123",
+        "registration": 1234567, "role": "ADMIN", "photoUrl":null, "course": null, "teamIds": null}  
+        """
+        * def csrfToken = null
 
-Background:
-    * def url_origin = "http://localhost:8080"
-    * def adminRead = 
-        """
-        {name: "admin1", email: "admin1@inatel.br", password: "admin",
-        registration: 1, role: "ADMIN", "photoUrl":null}   
-        """
-    * def adminUpdate = 
-        """
-        {name: "admin2", email: "admin2@inatel.br", password: "admin",
-        registration: 2, role: "ADMIN", "photoUrl":null}   
-        """
-    * def adminDelete = 
-        """
-        {name: "admin3", email: "admin3@inatel.br", password: "admin",
-        registration: 3, role: "ADMIN", "photoUrl":null}   
-        """
+        
+     @read
+    Scenario: Testando fazer login como ADMIN e ler todos os usuários
+        Given url url_origin + '/login'
+        And request { "email": "aqqdmin@inatel.br","password": "127450" } 
+        When method post
+        Then status 200
+        * def token = response.token
+        * print token
+        Given url url_origin + '/user/admin'
+        * header Authorization = 'Bearer ' + token
+        When method get
+        Then status 200
+        
+    @create
+    Scenario: Testando criar um usuario
+        Given url url_origin + '/login'
+        And request { "email": "aqqdmin@inatel.br","password": "127450" } 
+        When method post
+        Then status 200
+        * def token = response.token
+        Given url url_origin + '/user'
+        * header Authorization = 'Bearer ' + token
+        And request admin
+        When method post
+        Then status 200
 
-@create
-Scenario: Testando Criar um admin valido
-    Given url url_origin + '/user'
-    And request adminRead
-    When method post
-    Then status 200
-    And match response == { id: '#notnull', name: "admin1", email: "admin1@inatel.br", password: "admin",registration: 1, role: "ADMIN", "photoUrl":null }
+    @update
+    Scenario: Testando atualizar o nome de um usuario
+        Given url url_origin + '/login'
+        And request { "email": "aqqdmin@inatel.br","password": "127450" } 
+        When method post
+        Then status 200
+        * def token = response.token
+        Given url url_origin + '/user/admin'
+        * header Authorization = 'Bearer ' + token
+        And request admin
+        When method get
+        Then status 200
+        And def user = karate.filter(response, function(x){ return x.email == 'admin309@inatel.br' })[0]
+        Given url url_origin + '/user/' + user.id
+        * header Authorization = 'Bearer ' + token
+        And request
+        """ 
+            {
+            "name": "novo_admin", "email": "admin309@inatel.br", "password": "admin123",
+            "registration": 1234567, "role": "ADMIN", "photoUrl":null, "course": null, "teamIds": null
+            }
+        """
+        When method put
+        Then status 200
+
+    @read
+    Scenario: Testando ler um usuario
+        Given url url_origin + '/login'
+        And request { "email": "aqqdmin@inatel.br","password": "127450" } 
+        When method post
+        Then status 200
+        * def token = response.token
+        Given url url_origin + '/user/admin'
+        * header Authorization = 'Bearer ' + token
+        And request admin
+        When method get
+        Then status 200
+        And def user = karate.filter(response, function(x){ return x.email == 'admin309@inatel.br' })[0]
+        And match user == 
+        """ 
+        {
+        "role":"ADMIN",
+        "teams":[],
+        "credentialsNonExpired":true,
+        "enabled":true,
+        "authorities":[{"authority":"ROLE_USER"}],
+        "photoUrl":null,"password":"#ignore",
+        "name":"novo_admin",
+        "course":null,
+        "registration":1234567,
+        "accountNonExpired":true,
+        "id":"#notnull",
+        "email":"admin309@inatel.br",
+        "username":"admin309@inatel.br",
+        "accountNonLocked":true
+        }
+        """
+        Given url url_origin + '/user/' + user.id 
+        * header Authorization = 'Bearer ' + token
+        When method get
+        Then status 200
+
+    @delete
+    Scenario: Testando deletar um usuario
+        Given url url_origin + '/login'
+        And request { "email": "aqqdmin@inatel.br","password": "127450" } 
+        When method post
+        Then status 200
+        * def token = response.token
+        Given url url_origin + '/user/admin'
+        * header Authorization = 'Bearer ' + token
+        And request admin
+        When method get
+        * print response
+        * print response.id 
+        Then status 200
+        And def user = karate.filter(response, function(x){ return x.email == 'admin309@inatel.br' })[0]
+        Given url url_origin + '/user/' + user.id
+        * header Authorization = 'Bearer ' + token
+        When method delete
+        Then status 204
+        Given url url_origin + '/user/' + user.id
+        * header Authorization = 'Bearer ' + token
+        When method get
+        Then status 404
+
+
     
-@create
-Scenario: Criando outros admin para Testes
-    Given url url_origin + '/user'
-    And request adminUpdate
-    When method post
-    Then status 200
-    And match response == { id: '#notnull', name: "admin2", email: "admin2@inatel.br", password: "admin",registration: 2, role: "ADMIN", "photoUrl":null }
-    Given url url_origin + '/user'
-    And request adminDelete
-    When method post
-    Then status 200
-    And match response == { id: '#notnull', name: "admin3", email: "admin3@inatel.br", password: "admin",registration: 3, role: "ADMIN", "photoUrl":null }
 
-@read
-Scenario: Testando Ler um admin
-    Given url url_origin + '/user'
-    And request adminRead
-    When method get
-    Then status 200
-    And match response[0] == { id: '#notnull', name: "admin1", email: "admin1@inatel.br", password: "admin",registration: 1, role: "ADMIN", "photoUrl":null }
-
-@update
-Scenario: Atualizar um nome e senha
-    Given url url_origin + '/user'
-    And request adminUpdate
-    When method get
-    And match response[1] == { id: '#notnull', name: "admin2", email: "admin2@inatel.br", password: "admin",registration: 2, role: "ADMIN", "photoUrl":null }
-    Given url url_origin + '/user/' + response[1].id
-    And request {name: "novo_admin", email: "novo_admin@inatel.br", password: "admin", registration: 2, role: "ADMIN", "photoUrl":null}
-    When method put
-    Then status 200
-    And match response == {id: '#notnull', name: "novo_admin", email: "novo_admin@inatel.br", password: "admin", registration: 2, role: "ADMIN", "photoUrl":null}
-
-@delete
-Scenario: Testando Deletar um admin
-    Given url url_origin + '/user'
-    And request adminDelete
-    When method get
-    And match response[1] == { id: '#notnull', name: "admin3", email: "admin3@inatel.br", password: "admin",registration: 3, role: "ADMIN", "photoUrl":null }
-    Given url url_origin + '/user/' + response[1].id
-    * def aux = response[1].id
-    When method delete
-    Then status 204
-    Given url url_origin + '/user/' + aux
-    When method get
-    Then status 404
+    
