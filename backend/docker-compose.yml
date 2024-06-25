@@ -9,7 +9,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=sem_pressa_app
+      - POSTGRES_DB=postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -19,7 +19,7 @@ services:
     ports:
       - '8080:8080'
     environment:
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/sem_pressa_app
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/postgres
       - DB_USERNAME=postgres
       - DB_PASSWORD=docker
     depends_on:
